@@ -11,6 +11,7 @@
 <body>
     <h1>Recent Questions</h1>
     <ul>
+    <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
         <li><?php echo $question->title; ?></li>
         <!-- Update anchor tags to call JavaScript functions -->
@@ -19,6 +20,16 @@
             
         <a href="<?php echo base_url('question/details/' . $question->id); ?>">View Question</a>
         <?php endforeach; ?>
+        <?php else: ?>
+            <?php foreach($questions as $question): ?>
+        <li><?php echo $question->title; ?></li>
+        <!-- Update anchor tags to call JavaScript functions -->
+        <span class="upvote-group"><a href="<?php echo base_url('login'); ?>" class="upvote"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
+        <span class="downvote-group"><a href="<?php echo base_url('login'); ?>" class="downvote"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
+            
+        <a href="<?php echo base_url('login'); ?>">View Question</a>
+        <?php endforeach; ?>
+        <?php endif; ?>
     </ul>
 
     <div>
@@ -34,7 +45,6 @@
             <!-- Post Question Button -->
         <?php else: ?>
             <!-- Prompt to Log In -->
-            <p>Please login to post a question.</p>
             <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
         <?php endif; ?>
 
