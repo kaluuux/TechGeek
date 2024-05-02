@@ -1,0 +1,82 @@
+/* Reset and Body styling for a clean look */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    color: #333;
+
+    header ~ * {
+      padding: 10px;
+    }
+  }
+
+
+  
+  /* Styling for question cards */
+  div.question-card {
+    background-color: #ffffff;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px; /* Space between cards */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    transition: box-shadow 0.3s ease;
+    max-width: 40%;
+  }
+  
+  .question-card:hover {
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15); /* Enhanced shadow on hover */
+  }
+  
+  .question-card-title {
+    font-size: 20px;
+    margin-bottom: 10px; /* Space between title and voting buttons */
+  }
+  
+  .question-card-vote {
+    display: flex;
+    align-items: center;
+  }
+  
+  .add-question{
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      max-width: 40%;
+    }
+  }
+  
+  /* Form and button styling for consistency */
+  form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+  }
+  
+  input[type="text"], textarea {
+    width: 100%;
+    /* padding: 10px; */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  

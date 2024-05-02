@@ -1,26 +1,25 @@
 a {
   text-decoration: none;
-  color: #4F4F4F; /* default icon color */
-  font-size: 12px; /* adjust size as needed */
+  color: #4F4F4F;
+  /* font-size: 12px; */
 }
 
 a:hover .fa-arrow-up {
-  color: #ff8b60; /* Reddit's orangered color for upvotes */
+  color: #ff8b60; 
 }
 
 a:hover .fa-arrow-down {
-  color: #9494FF; /* A light blue color for downvotes */
+  color: #9494FF; 
 }
 
 a .fa-arrow-up {
-    color: #ff4400; /* Reddit's orangered color for upvotes */
+    color: #ff4400; 
 }
   
 a .fa-arrow-down {
-    color: #1861ff; /* A light blue color for downvotes */
+    color: #1861ff; 
 }
 
-/* Additional styling to space out the icons and align them with the text */
 a {
   display: inline-flex;
   align-items: center;
@@ -30,17 +29,17 @@ a {
 }
 
 span {
-  margin-left: 8px; /* Add space between icon and text */
+  margin-left: 8px; 
 }
 
 .upvote-group, .downvote-group {
-    border: 1px solid #ddd; /* light grey border */
-    border-radius: 200px; /* rounded corners */
-    padding: 5px 10px; /* some padding inside the border */
-    display: inline-flex; /* use flex layout */
-    align-items: center; /* align items vertically */
-    justify-content: center; /* center content horizontally */
-    text-decoration: none; /* remove underline from links */
-    margin-right: 8px; /* space between the button and the count */
-    transition: all 0.3s ease; /* smooth transition for hover effects */
+    border: 1px solid #ddd;
+    border-radius: 200px;
+    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-right: 8px;
+    transition: all 0.3s ease;
   }
