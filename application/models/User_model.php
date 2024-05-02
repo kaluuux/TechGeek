@@ -12,14 +12,12 @@ class User_model extends CI_Model {
     }
 
     public function authenticate($email, $password) {
-        // Code to check database for email/password
         $this->db->where('email', $email);
-        $this->db->where('password', md5($password)); // Consider using better hashing like password_hash()
+        $this->db->where('password', md5($password)); // Consider using better hashing like password_hash() in the future
         $query = $this->db->get('users');
-        if ($query->num_rows() > 0) {
-            return true;
-        } else {
-            return false;
+        if ($query->num_rows() == 1) {
+            return $query->row();  // Return the entire user object
         }
+        return false;
     }
 }

@@ -13,12 +13,14 @@
     <ul>
     <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
-        <li><?php echo $question->title; ?></li>
+        <div><a href="<?php echo base_url('question/details/' . $question->id); ?>"><?php echo $question->title; ?></a>
+        <!-- <p><?php echo $question->description; ?></p> -->
+        </div>
         <!-- Update anchor tags to call JavaScript functions -->
         <span class="upvote-group"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
         <span class="downvote-group"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
             
-        <a href="<?php echo base_url('question/details/' . $question->id); ?>">View Question</a>
+        <!-- <a href="<?php echo base_url('question/details/' . $question->id); ?>">View Question</a> -->
         <?php endforeach; ?>
         <?php else: ?>
             <?php foreach($questions as $question): ?>
@@ -51,41 +53,46 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    function upvoteQuestion(questionId) {
-        $.ajax({
-            url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
-            type: 'GET',
-            dataType: 'json', // Specify JSON data type
-            success: function(response) {
-                // Update the upvote count on the page
-                $('#upvotes_' + questionId).text(response.upvotes);
-                // Update the downvote count on the page
-                $('#downvotes_' + questionId).text(response.downvotes);
-                console.log('Upvote successful');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-            }
-        });
-    }
+        function upvoteQuestion(questionId) {
+            $.ajax({
+                url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        $('#upvotes_' + questionId).text(response.upvotes);
+                        $('#downvotes_' + questionId).text(response.downvotes);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + xhr.responseText); // This will show more detailed error
+                }
+            });
+        }
 
-    function downvoteQuestion(questionId) {
-        $.ajax({
-            url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
-            type: 'GET',
-            dataType: 'json', // Specify JSON data type
-            success: function(response) {
-                // Update the upvote count on the page
-                $('#upvotes_' + questionId).text(response.upvotes);
-                // Update the downvote count on the page
-                $('#downvotes_' + questionId).text(response.downvotes);
-                console.log('Downvote successful');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-            }
-        });
-    }
-</script>
+
+        function downvoteQuestion(questionId) {
+            $.ajax({
+                url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
+                type: 'POST', // Change to POST for better security
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        $('#upvotes_' + questionId).text(response.upvotes);
+                        $('#downvotes_' + questionId).text(response.downvotes);
+                        console.log('Downvote successful');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + error);
+                }
+            });
+        }
+    </script>
+
 </body>
 </html>

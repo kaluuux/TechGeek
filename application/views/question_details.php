@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>Question Details</h1>
+    <p>Asked by: <?php echo $question->username; ?></p>
     <h2><?php echo $question->title; ?></h2>
     <p><?php echo $question->description; ?></p>
 
