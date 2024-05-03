@@ -11,11 +11,6 @@ public function __construct() {
     }
 }
 
-// public function profile() {
-//     $user_id = $this->session->userdata('user_id');
-//     $data['user'] = $this->User_model->get_user_by_id($user_id);
-//     $this->load->view('profile_view', $data);
-// }
 public function profile() {
     $user_id = $this->session->userdata('user_id');
     $data['user'] = $this->User_model->get_user_by_id($user_id);

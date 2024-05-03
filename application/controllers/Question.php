@@ -7,22 +7,7 @@ class Question extends CI_Controller {
         // Load the necessary model
         $this->load->model('Question_model');
     }
-
-    // public function add() {
-    //     // Get form data
-    //     $title = $this->input->post('title');
-    //     $description = $this->input->post('description');
-
-    //     // Insert the question into the database
-    //     $data = array(
-    //         'title' => $title,
-    //         'description' => $description
-    //     );
-    //     $this->Question_model->add_question($data);
-
-    //     // Redirect back to the home page after adding the question
-    //     redirect('home');
-    // }
+    
     public function add() {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
