@@ -11,7 +11,39 @@
     <?php $this->load->view('header', ['title' => 'Home Page']); ?>
 </head>
 <body>
+    <div class="home-view-top">
     <h1>Recent Questions</h1>
+    <!-- Button to open modal -->
+    <div class="add-question">
+        <?php if ($logged_in): ?>
+            <button id="openModal">Ask a Question</button>
+            <!-- Modal -->
+            <div id="questionModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <form action="<?php echo base_url('question/add'); ?>" method="post">
+                        <label for="title">Question Title:</label><br>
+                        <input type="text" id="title" name="title" required><br>
+                        <label for="description">Question Description:</label><br>
+                        <textarea id="description" name="description" rows="4" required></textarea><br>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        <?php else: ?>
+            <!-- Prompt to Log In -->
+            <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
+        <?php endif; ?>
+    </div>
+    </div>
+    <div>
+        <select id="sortQuestions" onchange="sortQuestions()">
+            <option value="recent">Most Recent</option>
+            <option value="most_upvotes">Most Upvotes</option>
+            <option value="most_downvotes">Most Downvotes</option>
+            <option value="most_views">Most Views</option>
+        </select>
+    </div>
     <div>
     <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
@@ -21,6 +53,9 @@
             <div class="question-card-vote">
                 <span class="upvote-group"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
                 <span class="downvote-group"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
+            </div>
+            <div class="question-card-views">
+            <p>Views: <?php echo $question->view_count; ?></p>
             </div>
         </div>
         <?php endforeach; ?>
@@ -37,29 +72,6 @@
         <?php endforeach; ?>
         <?php endif; ?>
             </div>
-
-        <!-- Button to open modal -->
-        <div class="add-question">
-            <?php if ($logged_in): ?>
-                <button id="openModal">Add Question</button>
-                <!-- Modal -->
-                <div id="questionModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <form action="<?php echo base_url('question/add'); ?>" method="post">
-                            <label for="title">Question Title:</label><br>
-                            <input type="text" id="title" name="title" required><br>
-                            <label for="description">Question Description:</label><br>
-                            <textarea id="description" name="description" rows="4" required></textarea><br>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            <?php else: ?>
-                <!-- Prompt to Log In -->
-                <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
-            <?php endif; ?>
-        </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -131,6 +143,10 @@
             }
         });
 
+        function sortQuestions() {
+            var sortValue = document.getElementById('sortQuestions').value;
+            window.location.href = '<?php echo base_url('home?sort='); ?>' + sortValue;
+        }
     </script>
 
 </body>

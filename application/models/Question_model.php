@@ -3,11 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Question_model extends CI_Model {
     
-    public function get_recent_questions() {
-        $this->db->order_by('created_at', 'desc');
+    public function get_recent_questions($order_by = 'created_at DESC') {
+        $this->db->order_by($order_by);
         $query = $this->db->get('questions');
         return $query->result();
     }
+    
 
     public function add_question($data) {
         // Insert the question into the database
@@ -43,6 +44,10 @@ class Question_model extends CI_Model {
     //     $this->db->where('questions.id', $question_id);
     //     $query = $this->db->get();
     //     return $query->row();
+    // }
+    // public function get_recent_questions($order_by = 'created_at DESC') {
+    //     $this->db->order_by($order_by);
+    //     return $this->db->get('questions')->result();
     // }
     
 
