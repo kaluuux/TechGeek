@@ -14,19 +14,36 @@ class Question_model extends CI_Model {
         $this->db->insert('questions', $data);
     }
 
-    // public function get_question_details($question_id) {
-    //     $this->db->where('id', $question_id);
-    //     $query = $this->db->get('questions');
-    //     return $query->row();
-    // }
+    public function increment_view_count($question_id) {
+        $this->db->set('view_count', 'view_count+1', FALSE);
+        $this->db->where('id', $question_id);
+        $this->db->update('questions');
+    }
+    
     public function get_question_details($question_id) {
-        $this->db->select('questions.*, users.username');
+        // First, get the question details along with the username from the users table
+        $this->db->select('questions.*, users.username, questions.view_count');
         $this->db->from('questions');
         $this->db->join('users', 'users.id = questions.user_id');
         $this->db->where('questions.id', $question_id);
-        $query = $this->db->get();
-        return $query->row();
+        $question = $this->db->get()->row();
+    
+        // Check if the question exists before trying to increment the view count
+        if ($question) {
+            $this->increment_view_count($question_id);
+        }
+    
+        return $question;
     }
+    
+    // public function get_question_details($question_id) {
+    //     $this->db->select('questions.*, users.username');
+    //     $this->db->from('questions');
+    //     $this->db->join('users', 'users.id = questions.user_id');
+    //     $this->db->where('questions.id', $question_id);
+    //     $query = $this->db->get();
+    //     return $query->row();
+    // }
     
 
     public function upvote_question($question_id) {

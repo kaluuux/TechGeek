@@ -13,6 +13,7 @@
     <p>Asked by: <?php echo $question->username; ?></p>
     <h2><?php echo $question->title; ?></h2>
     <p><?php echo $question->description; ?></p>
+    <p>Views: <?php echo $question->view_count; ?></p>
 
     <span class="upvote-group"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
     <span class="downvote-group"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
