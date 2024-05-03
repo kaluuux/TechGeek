@@ -12,8 +12,18 @@
 </head>
 <body>
     <div class="home-view-top">
-    <h1>Recent Questions</h1>
-    <!-- Button to open modal -->
+    <div>
+        <select id="sortQuestions" onchange="sortQuestions()">
+            <option value="recent">Most Recent</option>
+            <option value="most_upvotes">Most Upvotes</option>
+            <option value="most_downvotes">Most Downvotes</option>
+            <option value="most_views">Most Views</option>
+        </select>
+    </div>
+    <form class="search-form" action="<?php echo base_url('home'); ?>" method="get">
+        <input type="text" name="search_query" placeholder="Search questions by title or username" value="<?php echo $this->input->get('search_query'); ?>">
+        <button type="submit">Search</button>
+    </form>
     <div class="add-question">
         <?php if ($logged_in): ?>
             <button id="openModal">Ask a Question</button>
@@ -37,18 +47,15 @@
     </div>
     </div>
     <div>
-        <select id="sortQuestions" onchange="sortQuestions()">
-            <option value="recent">Most Recent</option>
-            <option value="most_upvotes">Most Upvotes</option>
-            <option value="most_downvotes">Most Downvotes</option>
-            <option value="most_views">Most Views</option>
-        </select>
+    <h1>Recent Questions</h1>
+    <!-- Button to open modal -->
     </div>
     <div>
     <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
         <div class="question-card">
             <div class="question-card-title"><a href="<?php echo base_url('question/details/' . $question->id); ?>"><?php echo $question->title; ?></a>
+            <p>Asked by: <?php echo $question->username; ?></p>
             </div>
             <div class="question-card-vote">
                 <span class="upvote-group"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>

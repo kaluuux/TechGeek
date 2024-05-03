@@ -5,9 +5,9 @@ class Home extends CI_Controller {
 
     public function index() {
         $this->load->model('Question_model');
-        $sort = $this->input->get('sort');  // Get the sort parameter from the URL
-        
-        // Determine the order by based on the sort parameter
+        $sort = $this->input->get('sort');
+        $search_query = $this->input->get('search_query', TRUE); // Fetch search query, default to TRUE to allow empty strings
+
         switch ($sort) {
             case 'most_upvotes':
                 $order_by = 'upvotes DESC';
@@ -19,17 +19,11 @@ class Home extends CI_Controller {
                 $order_by = 'view_count DESC';
                 break;
             default:
-                $order_by = 'created_at DESC';  // Default is sorting by most recent
+                $order_by = 'created_at DESC';
         }
 
-        // Fetch questions with the specified order
-        $data['questions'] = $this->Question_model->get_recent_questions($order_by);
-        
-        // Check if user is logged in
-        $logged_in = $this->session->userdata('logged_in');
-
-        // Pass login status and questions to the view
-        $data['logged_in'] = $logged_in;
+        $data['questions'] = $this->Question_model->get_filtered_questions($order_by, $search_query);
+        $data['logged_in'] = $this->session->userdata('logged_in');
         $this->load->view('home_view', $data);
     }
 }

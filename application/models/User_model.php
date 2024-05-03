@@ -10,9 +10,6 @@ class User_model extends CI_Model {
         $this->db->where('id', $user_id);
         return $this->db->update('users', $data);
     }
-    // public function create_user($data) {
-    //     return $this->db->insert('users', $data);
-    // }
 
     public function check_user($email, $password) {
         $this->db->where('email', $email);
