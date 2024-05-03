@@ -38,23 +38,29 @@
         <?php endif; ?>
             </div>
 
-    <div class="add-question">
+        <!-- Button to open modal -->
+        <div class="add-question">
+            <?php if ($logged_in): ?>
+                <button id="openModal">Add Question</button>
+                <!-- Modal -->
+                <div id="questionModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <form action="<?php echo base_url('question/add'); ?>" method="post">
+                            <label for="title">Question Title:</label><br>
+                            <input type="text" id="title" name="title" required><br>
+                            <label for="description">Question Description:</label><br>
+                            <textarea id="description" name="description" rows="4" required></textarea><br>
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            <?php else: ?>
+                <!-- Prompt to Log In -->
+                <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
+            <?php endif; ?>
+        </div>
 
-        <?php if ($logged_in): ?>
-            <form action="<?php echo base_url('question/add'); ?>" method="post">
-            <label for="title">Question Title:</label><br>
-            <input type="text" id="title" name="title" required><br>
-            <label for="description">Question Description:</label><br>
-            <textarea id="description" name="description" rows="4" required></textarea><br>
-            <button type="submit">Submit</button>
-            </form>
-            <!-- Post Question Button -->
-        <?php else: ?>
-            <!-- Prompt to Log In -->
-            <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
-        <?php endif; ?>
-
-    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function upvoteQuestion(questionId) {
@@ -96,6 +102,35 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the modal
+            var modal = document.getElementById('questionModal');
+
+            // Get the button that opens the modal
+            var btn = document.getElementById('openModal');
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
     </script>
 
 </body>
