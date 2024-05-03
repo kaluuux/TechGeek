@@ -119,12 +119,12 @@
             // clearMessages();
         }
 
-        // function clearMessages() {
-        //     const messages = document.querySelectorAll('.flash-message');
-        //     messages.forEach(msg => {
-        //         msg.style.display = 'none';
-        //     });
-        // }
+        function clearMessages() {
+            const messages = document.querySelectorAll('.flash-message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }
 
         // Set the default tab
         document.getElementsByClassName('tablinks')[0].click();
