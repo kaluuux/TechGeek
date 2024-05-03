@@ -16,6 +16,7 @@
                         <li><a href="<?php echo base_url('home'); ?>">Home</a></li>
                         <?php if ($this->session->userdata('logged_in')): ?>
                             <li><a href="<?php echo base_url('auth/logout'); ?>">Logout</a></li>
+                            <a href="<?php echo base_url('user/profile'); ?>">Profile</a>
                         <?php else: ?>
                             <li><a href="<?php echo base_url('auth/login'); ?>">Login</a></li>
                             <li><a href="<?php echo base_url('auth/signup'); ?>">Sign Up</a></li>
