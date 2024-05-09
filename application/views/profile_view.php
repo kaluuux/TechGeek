@@ -6,6 +6,7 @@
     <title>User Profile</title>
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
     <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;"> -->
+    <?php $this->load->view('header', ['title' => 'Home Page']); ?>
     <style>
         /* Tab Styling */
         .tab {
