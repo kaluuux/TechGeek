@@ -343,4 +343,37 @@ class Question_model extends CI_Model {
         }
     }
     
+    public function delete_comment($comment_id, $user_id) {
+        $this->db->where('id', $comment_id);
+        $this->db->where('user_id', $user_id);
+        if ($this->db->delete('comments')) {
+            return ($this->db->affected_rows() > 0);
+        }
+        return false;
+    }
+    
+    // public function delete_comment($comment_id, $user_id) {
+    //     $this->db->where('id', $comment_id);
+    //     $this->db->where('user_id', $user_id); // Ensure the user owns the comment
+    //     $this->db->delete('comments');
+    //     return $this->db->affected_rows() > 0;
+    // }
+    
+    public function get_comment_count_by_question($question_id) {
+        $this->db->where('question_id', $question_id);
+        $this->db->from('comments');
+        return $this->db->count_all_results();
+    }
+    
+    public function get_question_id_by_comment($comment_id) {
+        $this->db->select('question_id');
+        $this->db->from('comments');
+        $this->db->where('id', $comment_id);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row()->question_id;
+        }
+        return null; // Return null if no question is associated with the comment
+    }
+    
 }

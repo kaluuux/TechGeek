@@ -86,7 +86,7 @@
                 </div>
                 <div id="comments">
                     <!-- <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p> -->
-                    <p><i class="far fa-comment"></i> <?php echo isset($question->comment_count) ? $question->comment_count : '0'; ?> Comments</p>
+                    <p><i class="far fa-comment"></i> <?php echo isset($question->comment_count) ? $question->comment_count : '0'; ?></p>
 
                     <!-- <?php if (isset($question->comments) && !empty($question->comments)): ?>
                         <?php $comments = explode("|||", $question->comments); ?>

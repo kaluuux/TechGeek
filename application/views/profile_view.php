@@ -91,12 +91,12 @@
         <?php if (!empty($questions)): ?>
             <ul>
                 <?php foreach ($questions as $question): ?>
-                    <li id="question_<?= $question->id ?>">
+                    <p id="question_<?= $question->id ?>">
                     <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                         <?php echo htmlspecialchars($question->title); ?>
                     </a>
                     <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button>
-                </li>
+                </p>
                 <?php endforeach; ?>
             </ul>
         <?php else: ?>

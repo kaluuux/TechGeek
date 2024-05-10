@@ -23,14 +23,30 @@ class Question extends CI_Controller {
     }
     
 
+    // public function details($question_id) {
+    //     $user_id = $this->session->userdata('user_id');
+    //     // $data['question'] = $this->Question_model->get_question_details($question_id);
+    //     $data['question'] = $this->Question_model->get_question_details($question_id, $user_id);
+    //     $data['comments'] = $this->Question_model->get_comments_by_question($question_id);
+    //     $data['logged_in'] = $this->session->userdata('logged_in');
+    //     $this->load->view('question_details', $data);
+    // }
+
     public function details($question_id) {
         $user_id = $this->session->userdata('user_id');
-        // $data['question'] = $this->Question_model->get_question_details($question_id);
-        $data['question'] = $this->Question_model->get_question_details($question_id, $user_id);
-        $data['comments'] = $this->Question_model->get_comments_by_question($question_id);
-        $data['logged_in'] = $this->session->userdata('logged_in');
-        $this->load->view('question_details', $data);
+        $question = $this->Question_model->get_question_details($question_id, $user_id);
+        $comments = $this->Question_model->get_comments_by_question($question_id);
+        $comment_count = $this->Question_model->get_comment_count_by_question($question_id); // Retrieve the count of comments
+        $logged_in = $this->session->userdata('logged_in');
+        
+        $this->load->view('question_details', [
+            'question' => $question,
+            'comments' => $comments,
+            'comment_count' => $comment_count,
+            'logged_in' => $logged_in
+        ]);
     }
+    
 
     // public function details($question_id) {
     //     $user_id = $this->session->userdata('user_id'); // Assuming you store user ID in session
@@ -182,6 +198,50 @@ class Question extends CI_Controller {
     // public function delete($question_id) {
     //     echo json_encode(['debug' => 'Method hit, question_id: ' . $question_id]);
     //     die();
+    // }
+    
+    // public function delete_comment($comment_id) {
+    //     $user_id = $this->session->userdata('user_id');
+    //     if (!$user_id) {
+    //         echo json_encode(['success' => false, 'message' => 'User not logged in']);
+    //         return;
+    //     }
+    
+    //     $this->load->model('Question_model');
+    //     $result = $this->Question_model->delete_comment($comment_id, $user_id);
+    //     if ($result) {
+    //         echo json_encode(['success' => true]);
+    //     } else {
+    //         echo json_encode(['success' => false, 'message' => 'Failed to delete comment or permission denied']);
+    //     }
+    // }
+
+    public function delete_comment($comment_id) {
+        $user_id = $this->session->userdata('user_id');
+        if (!$user_id) {
+            echo json_encode(['success' => false, 'message' => 'User not logged in']);
+            return;
+        }
+    
+        // Retrieve the question_id associated with the comment before deletion, if needed
+        $question_id = $this->Question_model->get_question_id_by_comment($comment_id);
+    
+        if ($this->Question_model->delete_comment($comment_id, $user_id)) {
+            $new_comment_count = $this->Question_model->get_comment_count_by_question($question_id);
+            echo json_encode(['success' => true, 'new_comment_count' => $new_comment_count, 'question_id' => $question_id]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to delete comment']);
+        }
+    }
+    
+    // public function details($question_id) {
+    //     $user_id = $this->session->userdata('user_id');
+    //     $data['question'] = $this->Question_model->get_question_details($question_id, $user_id);
+    //     $data['comments'] = $this->Question_model->get_comments_by_question($question_id);
+    //     $data['comment_count'] = $this->Question_model->get_comment_count_by_question($question_id); // Retrieve the count of comments
+    //     $data['logged_in'] = $this->session->userdata('logged_in');
+        
+    //     $this->load->view('question_details', $data);
     // }
     
     
