@@ -320,6 +320,27 @@ class Question_model extends CI_Model {
         return $votes;
     }
     
+    public function delete_question($question_id, $user_id) {
+        // Verify ownership before attempting delete
+        $this->db->where('id', $question_id);
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('questions');
+    
+        if ($query->num_rows() != 1) {
+            log_message('error', 'No question found, or it does not belong to the user');
+            return false; // Either no question found, or it doesn't belong to the user
+        }
+        // Attempt to delete the question
+        $this->db->where('id', $question_id);
+        $this->db->where('user_id', $user_id);
+        if ($this->db->delete('questions')) {
+            log_message('info', 'Successfully deleted question with ID: ' . $question_id);
+            return ($this->db->affected_rows() > 0);
+        } else {
+            $error = $this->db->error();
+            log_message('error', 'Delete failed for question ID ' . $question_id . ': ' . $error['message']);
+            return false;
+        }
+    }
     
 }
-
