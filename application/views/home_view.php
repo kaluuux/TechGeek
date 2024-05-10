@@ -9,16 +9,34 @@
     <title>Home Page</title>
     <!-- <a href="<?php echo base_url('auth/logout'); ?>">Logout</a> -->
     <?php $this->load->view('header', ['title' => 'Home Page']); ?>
+    <style>
+        .upvote-group.active, .downvote-group.active {
+        background-color: #4CAF50;
+        color: white;
+        }
+
+        .upvote-group:hover,
+        .downvote-group:hover {
+            background-color: #cacaca;
+        }
+
+        .upvote-group a, .downvote-group a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
     <div class="home-view-top">
     <div>
         <select id="sortQuestions" onchange="sortQuestions()">
-            <option value="recent">Most Recent</option>
-            <option value="most_upvotes">Most Upvotes</option>
-            <option value="most_downvotes">Most Downvotes</option>
-            <option value="most_views">Most Views</option>
+            <option value="recent" <?php echo ($sort == 'recent') ? 'selected' : ''; ?>>Most Recent</option>
+            <option value="most_upvotes" <?php echo ($sort == 'most_upvotes') ? 'selected' : ''; ?>>Most Upvotes</option>
+            <option value="most_downvotes" <?php echo ($sort == 'most_downvotes') ? 'selected' : ''; ?>>Most Downvotes</option>
+            <option value="most_views" <?php echo ($sort == 'most_views') ? 'selected' : ''; ?>>Most Views</option>
         </select>
+
+
     </div>
     <form class="search-form" action="<?php echo base_url('home'); ?>" method="get">
         <input type="text" name="search_query" placeholder="Search questions by title or username" value="<?php echo $this->input->get('search_query'); ?>">
@@ -54,21 +72,52 @@
     <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
         <div class="question-card">
-            <div class="question-card-title"><a href="<?php echo base_url('question/details/' . $question->id); ?>"><?php echo $question->title; ?></a>
-            <p>Asked by: <?php echo $question->username; ?></p>
+            <div class="question-card-title">
+                <a href="<?php echo base_url('question/details/' . $question->id); ?>">
+                    <?php echo $question->title; ?>
+                </a>
+                <p><i class="fas fa-at"></i><?php echo $question->username; ?></p>
+                <p>Date: <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
             </div>
-            <div class="question-card-vote">
-                <span class="upvote-group"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
-                <span class="downvote-group"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
-            </div>
-            <div class="question-card-views">
-            <p>Views: <?php echo $question->view_count; ?></p>
+            <div class="question-interaction-comp">
+                <div class="question-card-vote">
+                    <span class="upvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'up' ? 'active' : '' ?>" id="upvote_group_<?php echo $question->id; ?>"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up"></i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
+                    <span class="downvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'down' ? 'active' : '' ?>" id="downvote_group_<?php echo $question->id; ?>"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down"></i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
+                </div>
+                <div id="comments">
+                    <!-- <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p> -->
+                    <p><i class="far fa-comment"></i> <?php echo isset($question->comment_count) ? $question->comment_count : '0'; ?> Comments</p>
+
+                    <!-- <?php if (isset($question->comments) && !empty($question->comments)): ?>
+                        <?php $comments = explode("|||", $question->comments); ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="comment">
+                                <p><?php echo htmlspecialchars($comment); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No comments yet.</p>
+                    <?php endif; ?> -->
+                </div>
+                <?php if ($logged_in): ?>
+                    <!-- <form class="commentForm" onsubmit="postComment(event, this); return false;">
+                        <input type="hidden" name="question_id" value="<?php echo $question->id; ?>">
+                        <textarea name="comment" required></textarea>
+                        <button type="submit">Post Comment</button>
+                    </form> -->
+
+                <?php endif; ?>
+
+                <div class="question-card-views">
+                    <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
+                </div>
             </div>
         </div>
         <?php endforeach; ?>
         <?php else: ?>
         <?php foreach($questions as $question): ?>
         <div class="question-card">
+        <p>Asked by: <?php echo $question->username; ?></p>
             <div class="question-card-title"><?php echo $question->title; ?></div>
             <div class="question-card-vote">
                 <span class="upvote-group"><a href="<?php echo base_url('login'); ?>" class="upvote"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
@@ -82,45 +131,75 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function upvoteQuestion(questionId) {
-            $.ajax({
-                url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
-                type: 'POST',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        alert(response.error);
-                    } else {
-                        $('#upvotes_' + questionId).text(response.upvotes);
-                        $('#downvotes_' + questionId).text(response.downvotes);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('Error: ' + xhr.responseText); // This will show more detailed error
-                }
-            });
-        }
+//         function upvoteQuestion(questionId) {
+//     $.ajax({
+//         url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(response) {
+//             if (response.error) {
+//                 alert(response.error);
+//             } else {
+//                 $('#upvotes_' + questionId).text(response.upvotes);
+//                 $('#downvotes_' + questionId).text(response.downvotes);
+//                 $('#upvote_group_' + questionId).addClass('active');
+//                 $('#downvote_group_' + questionId).removeClass('active');
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             alert('Error: ' + xhr.responseText);
+//         }
+//     });
+// }
 
+// function downvoteQuestion(questionId) {
+//     $.ajax({
+//         url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(response) {
+//             if (response.error) {
+//                 alert(response.error);
+//             } else {
+//                 $('#upvotes_' + questionId).text(response.upvotes);
+//                 $('#downvotes_' + questionId).text(response.downvotes);
+//                 $('#downvote_group_' + questionId).addClass('active');
+//                 $('#upvote_group_' + questionId).removeClass('active');
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             alert('Error: ' + error);
+//         }
+//     });
+// }
 
-        function downvoteQuestion(questionId) {
-            $.ajax({
-                url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
-                type: 'POST', // Change to POST for better security
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        alert(response.error);
-                    } else {
-                        $('#upvotes_' + questionId).text(response.upvotes);
-                        $('#downvotes_' + questionId).text(response.downvotes);
-                        console.log('Downvote successful');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('Error: ' + error);
-                }
-            });
+function upvoteQuestion(questionId) {
+    $.ajax({
+        url: '<?= base_url("question/upvote/"); ?>' + questionId,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            handleVote(response, questionId); // Call handleVote here
+        },
+        error: function(xhr, status, error) {
+            alert('Error: ' + xhr.responseText);
         }
+    });
+}
+
+function downvoteQuestion(questionId) {
+    $.ajax({
+        url: '<?= base_url("question/downvote/"); ?>' + questionId,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            handleVote(response, questionId); // Call handleVote here
+        },
+        error: function(xhr, status, error) {
+            alert('Error: ' + error);
+        }
+    });
+}
 
         document.addEventListener('DOMContentLoaded', function() {
             // Get the modal
@@ -154,6 +233,58 @@
             var sortValue = document.getElementById('sortQuestions').value;
             window.location.href = '<?php echo base_url('home?sort='); ?>' + sortValue;
         }
+
+        function postComment(event, formElement) {
+            event.preventDefault(); // Prevent the default form submit action
+            var formData = $(formElement).serialize(); // Serialize the data from the specific form
+
+            $.ajax({
+                url: '<?php echo base_url('question/post_comment'); ?>',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        var username = "Your Username"; // Assuming you have the username available as discussed previously
+                        var newCommentHtml = '<div class="comment"><p><strong>' + username + ':</strong> ' + $(formElement).find('textarea[name="comment"]').val() + '</p></div>';
+                        $(formElement).closest('.question-card').find('#comments').append(newCommentHtml);
+                        $(formElement).find('textarea[name="comment"]').val(''); // Clear the textarea
+                        alert('Comment posted!');
+                    } else {
+                        alert('Error: ' + (response.error || 'Unknown error'));
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function handleVote(response, questionId) {
+    if (response.error) {
+        alert(response.error);
+    } else {
+        $('#upvotes_' + questionId).text(response.upvotes);
+        $('#downvotes_' + questionId).text(response.downvotes);
+        // Update the UI based on the current vote
+        switch(response.currentVote) {
+            case 'up':
+                $('#upvote_group_' + questionId).addClass('active');
+                $('#downvote_group_' + questionId).removeClass('active');
+                break;
+            case 'down':
+                $('#downvote_group_' + questionId).addClass('active');
+                $('#upvote_group_' + questionId).removeClass('active');
+                break;
+            default:
+                $('#upvote_group_' + questionId).removeClass('active');
+                $('#downvote_group_' + questionId).removeClass('active');
+                break;
+        }
+    }
+}
+
+
     </script>
 
 </body>

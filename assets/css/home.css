@@ -135,3 +135,8 @@ body {
     width: 80% !important;
   }
 }
+
+.question-interaction-comp {
+  display: flex;
+  gap: 25px;
+}
