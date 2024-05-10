@@ -1,45 +1,63 @@
 a {
-  text-decoration: none;
-  color: #4F4F4F;
-  /* font-size: 12px; */
+	text-decoration: none;
+	color: #4f4f4f;
+	/* font-size: 12px; */
 }
 
 a:hover .fa-arrow-up {
-  color: #ff8b60; 
+	color: #ff8b60;
 }
 
 a:hover .fa-arrow-down {
-  color: #9494FF; 
+	color: #9494ff;
 }
 
 a .fa-arrow-up {
-    color: #ff4400; 
+	color: #ff4400;
 }
-  
+
 a .fa-arrow-down {
-    color: #1861ff; 
+	color: #1861ff;
 }
 
 a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px;
-  transition: color 0.3s;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 5px;
+	transition: color 0.3s;
 }
 
 span {
-  margin-left: 8px; 
+	margin-left: 8px;
 }
 
-.upvote-group, .downvote-group {
-    border: 1px solid #ddd;
-    border-radius: 200px;
-    padding: 5px 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    margin-right: 8px;
-    transition: all 0.3s ease;
-  }
+.upvote-group,
+.downvote-group {
+	border: 1px solid #ddd;
+	border-radius: 200px;
+	padding: 5px 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	margin-right: 8px;
+	transition: all 0.3s ease;
+}
+
+.upvote-group.active,
+.downvote-group.active {
+	background-color: #4caf50;
+	color: white;
+}
+
+.upvote-group:hover,
+.downvote-group:hover {
+	background-color: #cacaca;
+}
+
+.upvote-group a,
+.downvote-group a {
+	text-decoration: none;
+	color: inherit;
+}
