@@ -76,7 +76,8 @@
                 <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                     <?php echo $question->title; ?>
                 </a>
-                <p><i class="fas fa-at"></i><?php echo $question->username; ?></p>
+                <!-- <p><i class="fas fa-at"></i><?php echo $question->username; ?></p> -->
+                <p><a href="<?php echo base_url('user/profile/' . $question->user_id); ?>"><i class="fas fa-at"></i> <?php echo $question->username; ?></a></p>
                 <p>Date: <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
             </div>
             <div class="question-interaction-comp">

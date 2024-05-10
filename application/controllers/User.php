@@ -11,12 +11,27 @@ public function __construct() {
     }
 }
 
-public function profile() {
-    $user_id = $this->session->userdata('user_id');
+// public function profile() {
+//     $user_id = $this->session->userdata('user_id');
+//     $data['user'] = $this->User_model->get_user_by_id($user_id);
+//     $data['questions'] = $this->User_model->get_questions_by_user($user_id); // Fetch user questions
+//     $this->load->view('profile_view', $data);
+// }
+
+public function profile($user_id = null) {
+    if (!$user_id) {
+        $user_id = $this->session->userdata('user_id');
+    }
+
     $data['user'] = $this->User_model->get_user_by_id($user_id);
-    $data['questions'] = $this->User_model->get_questions_by_user($user_id); // Fetch user questions
+    $data['questions'] = $this->User_model->get_questions_by_user($user_id); // Fetch questions by user
+
+    // Check if the profile belongs to the logged-in user
+    $data['is_own_profile'] = ($user_id == $this->session->userdata('user_id'));
+
     $this->load->view('profile_view', $data);
 }
+
 
 public function update_profile() {
     $user_id = $this->session->userdata('user_id');
@@ -47,6 +62,5 @@ public function update_profile() {
     $this->session->set_flashdata('success', 'Profile updated successfully.');
     redirect('user/profile');
 }
-
 
 }
