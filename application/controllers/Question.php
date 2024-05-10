@@ -162,6 +162,27 @@ class Question extends CI_Controller {
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
+
+    public function delete($question_id) {
+        $user_id = $this->session->userdata('user_id'); // Ensure the user is logged in
+        if (!$user_id) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+    
+        $this->load->model('Question_model');
+        $result = $this->Question_model->delete_question($question_id, $user_id);
+        if ($result) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+    }
+    
+    // public function delete($question_id) {
+    //     echo json_encode(['debug' => 'Method hit, question_id: ' . $question_id]);
+    //     die();
+    // }
     
     
 }

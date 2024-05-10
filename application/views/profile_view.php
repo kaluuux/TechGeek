@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
     <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;"> -->
     <?php $this->load->view('header', ['title' => 'Home Page']); ?>
@@ -90,7 +91,12 @@
         <?php if (!empty($questions)): ?>
             <ul>
                 <?php foreach ($questions as $question): ?>
-                    <p><a href="<?php echo base_url('question/details/' . $question->id); ?>"><?php echo htmlspecialchars($question->title); ?></a></p>
+                    <li id="question_<?= $question->id ?>">
+                    <a href="<?php echo base_url('question/details/' . $question->id); ?>">
+                        <?php echo htmlspecialchars($question->title); ?>
+                    </a>
+                    <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button>
+                </li>
                 <?php endforeach; ?>
             </ul>
         <?php else: ?>
@@ -138,6 +144,58 @@
                 form.style.display = 'none';
             }
         }
+
+//         function deleteQuestion(questionId) {
+//     if (!confirm("Are you sure you want to delete this question?")) {
+//         return;
+//     }
+
+//     $.ajax({
+//         url: '<?php echo base_url("question/delete/"); ?>' + questionId,
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(response) {
+//             console.log('Success response:', response);
+//             if (response.success) {
+//                 alert("Question deleted successfully!");
+//                 location.reload(); // Reload the page to update the list
+//             } else {
+//                 alert("Failed to delete the question.");
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             console.error('AJAX Error:', xhr.responseText);
+//             alert('Error: ' + xhr.responseText);
+//         }
+//     });
+// }
+function deleteQuestion(questionId) {
+    if (!confirm('Are you sure you want to delete this question?')) {
+        return; // Stop the function if the user cancels.
+    }
+
+    $.ajax({
+        url: '<?= base_url("question/delete/"); ?>' + questionId,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Remove the question element from the page
+                $('#question_' + questionId).remove();
+                alert('Question deleted successfully!');
+            } else {
+                alert('Failed to delete the question.');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Error: ' + xhr.responseText);
+        }
+    });
+}
+
+
+
+
 
     </script>
 </body>
