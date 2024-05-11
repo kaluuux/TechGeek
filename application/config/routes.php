@@ -62,3 +62,4 @@ $route['question/upvote/(:any)'] = 'question/upvote/$1';
 $route['question/downvote/(:any)'] = 'question/downvote/$1';
 $route['user/profile'] = 'user/profile';
 $route['user/update_profile'] = 'user/update_profile';
+$route['user/profile/(:num)'] = 'user/profile/$1';

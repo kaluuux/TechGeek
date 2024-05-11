@@ -40,10 +40,17 @@
     </style>
 </head>
 <body>
-    <h1>User Profile</h1>
+<h1><?= htmlspecialchars($user->username) ?>'s Profile</h1>
     <div class="tab">
-        <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
+        <!-- <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
+        <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button> -->
+        <?php if ($is_own_profile): ?>
+            <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
         <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button>
+    <?php else: ?>
+        <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
+        <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Questions</button>
+    <?php endif; ?>
     </div>
 
     <div id="ProfileDetails" class="tabcontent">
@@ -56,7 +63,7 @@
         <?php if ($this->session->flashdata('success')): ?>
             <p class="flash-message" style="color: green;"><?php echo $this->session->flashdata('success'); ?></p>
         <?php endif; ?>
-        <div id="viewProfile">
+        <!-- <div id="viewProfile">
             <p>Username: <?php echo htmlspecialchars($user->username); ?></p>
             <p>Email: <?php echo htmlspecialchars($user->email); ?></p>
             <p>Joined Date: <?php echo htmlspecialchars(date('F j, Y', strtotime($user->joined_date))); ?></p>
@@ -65,7 +72,19 @@
             <p>Mobile Number: <?php echo htmlspecialchars($user->mobile); ?></p>
             <p>Address: <?php echo htmlspecialchars($user->address); ?></p>
             <button onclick="toggleEditForm()">Edit</button>
-        </div>
+        </div> -->
+        <div id="viewProfile">
+        <p>Email: <?= htmlspecialchars($user->email); ?></p>
+        <p>Joined Date: <?= date('F j, Y', strtotime($user->joined_date)); ?></p>
+        <p>First Name: <?= htmlspecialchars($user->first_name); ?></p>
+        <p>Last Name: <?= htmlspecialchars($user->last_name); ?></p>
+        <p>Mobile Number: <?= htmlspecialchars($user->mobile); ?></p>
+        <p>Address: <?= htmlspecialchars($user->address); ?></p>
+
+        <?php if ($is_own_profile): ?>
+            <button onclick="toggleEditForm()">Edit</button>
+        <?php endif; ?>
+    </div>
         
         <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;">
         <!-- Adding fields for username and email in the edit form -->
@@ -87,16 +106,23 @@
     </div>
 
     <div id="YourQuestions" class="tabcontent">
+    <?php if ($is_own_profile): ?>
         <h3>Your Questions</h3>
+    <?php else: ?>
+        <h3>Questions</h3>
+    <?php endif; ?>
         <?php if (!empty($questions)): ?>
             <ul>
                 <?php foreach ($questions as $question): ?>
-                    <li id="question_<?= $question->id ?>">
+                    <p id="question_<?= $question->id ?>">
                     <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                         <?php echo htmlspecialchars($question->title); ?>
                     </a>
-                    <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button>
-                </li>
+                    <?php if ($is_own_profile): ?>
+                        <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button>
+        <?php endif; ?>
+                    <!-- <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button> -->
+                </p>
                 <?php endforeach; ?>
             </ul>
         <?php else: ?>

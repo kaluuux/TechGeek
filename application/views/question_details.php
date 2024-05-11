@@ -15,13 +15,25 @@
     <p><i class="fas fa-calendar"></i> <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
     <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
     <p><?php echo $question->description; ?></p>
-    <h3>Comments: <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p></h3>
+    <!-- <h3>Comments: <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p></h3> -->
+    <h3>Comments: <span id="comment_count"><?= $comment_count; ?></span></h3>
+
     <div id="comments">
         <?php if (!empty($comments)): ?>
             <?php foreach ($comments as $comment): ?>
-                <div class="comment">
+                <!-- <div class="comment">
                     <p><span style="font-weight: 700;"><?php echo $comment->username; ?> : </span><span><?php echo htmlspecialchars($comment->comment); ?></span></p>
+                    <?php if ($comment->user_id == $this->session->userdata('user_id')): ?>
+                        <button onclick="deleteComment(<?= $comment->id; ?>)">Delete</button>
+                    <?php endif; ?>
+                </div> -->
+                <div id="comment_<?= $comment->id ?>" class="comment">
+                <p><span style="font-weight: 700;"><?php echo $comment->username; ?> : </span><span><?php echo htmlspecialchars($comment->comment); ?></span></p>
+                    <?php if ($comment->user_id == $this->session->userdata('user_id')): ?>
+                        <button onclick="deleteComment(<?= $comment->id; ?>)">Delete</button>
+                    <?php endif; ?>
                 </div>
+
             <?php endforeach; ?>
         <?php else: ?>
             <p>No comments yet.</p>
@@ -161,6 +173,60 @@ function downvoteQuestion(questionId) {
             }
         });
     }
+
+//     function deleteComment(commentId) {
+//     if (!confirm('Are you sure you want to delete this comment?')) {
+//         return; // Stop if the user cancels the deletion.
+//     }
+
+//     $.ajax({
+//         url: '<?= base_url("question/delete_comment/"); ?>' + commentId,
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(response) {
+//             if (response.success) {
+//                 // Remove the comment element from the page
+//                 $('#comment_' + commentId).fadeOut(400, function() {
+//                     $(this).remove(); // This line ensures the comment is not only hidden but removed from DOM
+//                 });
+//                 alert('Comment deleted successfully!');
+//             } else {
+//                 alert(response.message || 'Failed to delete the comment.');
+//             }
+//         },
+//         error: function(xhr, status, error) {
+//             alert('Error: ' + xhr.responseText);
+//         }
+//     });
+// }
+
+function deleteComment(commentId) {
+        if (!confirm('Are you sure you want to delete this comment?')) {
+        return; // Stop if the user cancels the deletion.
+    }
+    $.ajax({
+        url: '<?= base_url("question/delete_comment/"); ?>' + commentId,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Remove the comment from the DOM
+                $('#comment_' + commentId).remove();
+                // Update the comment count display for the associated question
+                $('#comment_count').text(response.new_comment_count);  // Correctly target the element with ID 'comment_count'
+            } else {
+                alert('Failed to delete comment: ' + response.message);
+            }
+        },
+        error: function(xhr) {
+            alert('Error: ' + xhr.responseText);
+        }
+    });
+}
+
+
+
+
 </script>
 </body>
 </html>
