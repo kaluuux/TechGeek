@@ -21,16 +21,6 @@ class Question extends CI_Controller {
         $this->Question_model->add_question($data);
         redirect('home');
     }
-    
-
-    // public function details($question_id) {
-    //     $user_id = $this->session->userdata('user_id');
-    //     // $data['question'] = $this->Question_model->get_question_details($question_id);
-    //     $data['question'] = $this->Question_model->get_question_details($question_id, $user_id);
-    //     $data['comments'] = $this->Question_model->get_comments_by_question($question_id);
-    //     $data['logged_in'] = $this->session->userdata('logged_in');
-    //     $this->load->view('question_details', $data);
-    // }
 
     public function details($question_id) {
         $user_id = $this->session->userdata('user_id');
@@ -46,50 +36,7 @@ class Question extends CI_Controller {
             'logged_in' => $logged_in
         ]);
     }
-    
 
-    // public function details($question_id) {
-    //     $user_id = $this->session->userdata('user_id'); // Assuming you store user ID in session
-    //     $data['question'] = $this->Question_model->get_question_details_with_user_votes($question_id, $user_id);
-    //     $data['logged_in'] = $this->session->userdata('logged_in');
-    //     $this->load->view('question_details', $data);
-    // }
-    
-    
-
-    // public function upvote($question_id) {
-    //     try {
-    //         if ($this->session->userdata('logged_in')) {
-    //             $user_id = $this->session->userdata('user_id');
-    //             $result = $this->Question_model->cast_vote($question_id, $user_id, 'up');
-    //             if ($result) {
-    //                 $question = $this->Question_model->get_question_details($question_id);
-    //                 echo json_encode(['upvotes' => $question->upvotes, 'downvotes' => $question->downvotes]);
-    //             } else {
-    //                 echo json_encode(['error' => 'Could not update vote.']);
-    //             }
-    //         } else {
-    //             echo json_encode(['error' => 'User not logged in.']);
-    //         }
-    //     } catch (Exception $e) {
-    //         log_message('error', $e->getMessage());
-    //         echo json_encode(['error' => 'Server error occurred.']);  // More specific error can be added for debugging
-    //     }
-    // }
-    // public function upvote($question_id) {
-    //     if ($this->session->userdata('logged_in')) {
-    //         $user_id = $this->session->userdata('user_id');
-    //         $result = $this->Question_model->cast_vote($question_id, $user_id, 'up');
-    //         if ($result) {
-    //             $question = $this->Question_model->get_question_details($question_id, $user_id);  // Ensure both parameters are passed
-    //             echo json_encode(['upvotes' => $question->upvotes, 'downvotes' => $question->downvotes]);
-    //         } else {
-    //             echo json_encode(['error' => 'Could not update vote.']);
-    //         }
-    //     } else {
-    //         echo json_encode(['error' => 'User not logged in.']);
-    //     }
-    // }
     public function upvote($question_id) {
         if ($this->session->userdata('logged_in')) {
             $user_id = $this->session->userdata('user_id');
@@ -108,23 +55,6 @@ class Question extends CI_Controller {
             echo json_encode(['error' => 'User not logged in.']);
         }
     }
-    
-    
-    
-    // public function downvote($question_id) {
-    //     if ($this->session->userdata('logged_in')) {
-    //         $user_id = $this->session->userdata('user_id');
-    //         $result = $this->Question_model->cast_vote($question_id, $user_id, 'down');
-    //         if ($result) {
-    //             $question = $this->Question_model->get_question_details($question_id, $user_id); // Ensure both parameters are passed
-    //             echo json_encode(['upvotes' => $question->upvotes, 'downvotes' => $question->downvotes]);
-    //         } else {
-    //             echo json_encode(['error' => 'Could not update vote.']);
-    //         }
-    //     } else {
-    //         redirect('login');  // Redirects to login if the user is not logged in
-    //     }
-    // }
     
     public function downvote($question_id) {
         if ($this->session->userdata('logged_in')) {
@@ -194,27 +124,6 @@ class Question extends CI_Controller {
             echo json_encode(['success' => false]);
         }
     }
-    
-    // public function delete($question_id) {
-    //     echo json_encode(['debug' => 'Method hit, question_id: ' . $question_id]);
-    //     die();
-    // }
-    
-    // public function delete_comment($comment_id) {
-    //     $user_id = $this->session->userdata('user_id');
-    //     if (!$user_id) {
-    //         echo json_encode(['success' => false, 'message' => 'User not logged in']);
-    //         return;
-    //     }
-    
-    //     $this->load->model('Question_model');
-    //     $result = $this->Question_model->delete_comment($comment_id, $user_id);
-    //     if ($result) {
-    //         echo json_encode(['success' => true]);
-    //     } else {
-    //         echo json_encode(['success' => false, 'message' => 'Failed to delete comment or permission denied']);
-    //     }
-    // }
 
     public function delete_comment($comment_id) {
         $user_id = $this->session->userdata('user_id');
@@ -232,17 +141,25 @@ class Question extends CI_Controller {
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to delete comment']);
         }
+    }  
+
+    public function upvote_comment($comment_id) {
+        if ($this->session->userdata('logged_in')) {
+            $response = $this->Question_model->cast_comment_vote($comment_id, $this->session->userdata('user_id'), 'up');
+            echo json_encode($response);
+        } else {
+            echo json_encode(['error' => 'User not logged in.']);
+        }
     }
     
-    // public function details($question_id) {
-    //     $user_id = $this->session->userdata('user_id');
-    //     $data['question'] = $this->Question_model->get_question_details($question_id, $user_id);
-    //     $data['comments'] = $this->Question_model->get_comments_by_question($question_id);
-    //     $data['comment_count'] = $this->Question_model->get_comment_count_by_question($question_id); // Retrieve the count of comments
-    //     $data['logged_in'] = $this->session->userdata('logged_in');
-        
-    //     $this->load->view('question_details', $data);
-    // }
+    public function downvote_comment($comment_id) {
+        if ($this->session->userdata('logged_in')) {
+            $response = $this->Question_model->cast_comment_vote($comment_id, $this->session->userdata('user_id'), 'down');
+            echo json_encode($response);
+        } else {
+            echo json_encode(['error' => 'User not logged in.']);
+        }
+    }
     
     
 }
