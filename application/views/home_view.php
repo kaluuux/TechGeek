@@ -48,13 +48,21 @@
             <div id="questionModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <form action="<?php echo base_url('question/add'); ?>" method="post">
+                    <!-- <form action="<?php echo base_url('question/add'); ?>" method="post">
                         <label for="title">Question Title:</label><br>
                         <input type="text" id="title" name="title" required><br>
                         <label for="description">Question Description:</label><br>
                         <textarea id="description" name="description" rows="4" required></textarea><br>
                         <button type="submit">Submit</button>
-                    </form>
+                    </form> -->
+                    <form id="questionForm">
+    <label for="title">Question Title:</label>
+    <input type="text" id="title" name="title" required><br>
+    <label for="description">Question Description:</label>
+    <textarea id="description" name="description" required></textarea><br>
+    <button type="submit">Submit</button>
+</form>
+
                 </div>
             </div>
         <?php else: ?>
@@ -92,6 +100,7 @@
                 </div>
             </div>
         </div>
+
         <?php endforeach; ?>
         <?php else: ?>
         <?php foreach($questions as $question): ?>
@@ -110,6 +119,58 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
+
+
+$(document).ready(function() {
+    $('#questionForm').submit(function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: '<?= base_url("api/post_question"); ?>',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Question added successfully');
+                    document.getElementById('questionModal').style.display = 'none';
+                    window.location.reload();
+                    $('#questionForm')[0].reset(); // Reset the form fields
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Failed to submit question. Please try again.');
+            }
+        });
+    });
+
+    // Reset form when closing the modal with the X button or clicking outside the modal
+    var modal = document.getElementById('questionModal');
+    var btn = document.getElementById('openModal');
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    };
+
+    span.onclick = function() {
+        modal.style.display = "none";
+        $('#questionForm')[0].reset();
+    };
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            $('#questionForm')[0].reset();
+        }
+    };
+});
+
+
 
 function upvoteQuestion(questionId) {
     $.ajax({

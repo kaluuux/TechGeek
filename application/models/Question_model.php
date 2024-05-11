@@ -8,12 +8,12 @@ class Question_model extends CI_Model {
         $query = $this->db->get('questions');
         return $query->result();
     }
-    
 
     public function add_question($data) {
-        // Insert the question into the database
-        $this->db->insert('questions', $data);
+        $result = $this->db->insert('questions', $data);
+        return $this->db->affected_rows() > 0;  // Check if any rows were actually inserted
     }
+    
 
     public function increment_view_count($question_id) {
         $this->db->set('view_count', 'view_count+1', FALSE);
