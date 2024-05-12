@@ -267,5 +267,4 @@ function downvoteQuestion(questionId) {
     </script>
 
 </body>
-<footer><?php $this->load->view('header', ['title' => 'Home']); ?></footer>
 </html>

@@ -1,25 +1,25 @@
 $(document).ready(function() {
     var User = Backbone.Model.extend({
         defaults: {
-            username: 'Guest'  // Default username is set to 'Guest'
+            username: 'Guest'
         }
     });
 
     var UserView = Backbone.View.extend({
-        el: '#userForm',  // Targets the div with id='userForm'
+        el: '#userForm',
 
         events: {
             'submit form': 'submitForm'
         },
 
         initialize: function() {
-            this.model = new User();  // Initializes the model when the view is created
-            this.render();  // Calls the render function upon initialization
+            this.model = new User();
+            this.render();
         },
 
         render: function() {
-            var template = _.template($('#user-template').html());  // Compiles the template
-            this.$el.html(template(this.model.attributes));  // Renders the compiled HTML to the element
+            var template = _.template($('#user-template').html());
+            this.$el.html(template(this.model.attributes));
         },
 
         submitForm: function(event) {
@@ -35,10 +35,9 @@ $(document).ready(function() {
                 alert('Password must be at least 6 characters.');
                 return;
             }
-            // If validation passes, submit the form
             this.$('form')[0].submit();
         }
     });
 
-    var userView = new UserView();  // Creates an instance of UserView
+    var userView = new UserView();
 });
