@@ -1,5 +1,5 @@
 body {
-    background-color: #000 !important;
+	background-color: #000 !important;
 }
 .question-details-container {
 	padding: 20px 20px 20px 50px;
@@ -9,7 +9,7 @@ body {
 	animation: slideInDown 1s ease-out;
 	display: flex;
 	flex-direction: column;
-    background: white;
+	background: white;
 
 	hr {
 		border: none;
@@ -34,124 +34,123 @@ body {
 		margin-bottom: 10px;
 		column-gap: 35px;
 		color: black;
-        font-size: 14px;
+		font-size: 14px;
 
-        p {
-            margin: 0;
+		p {
+			margin: 0;
 
-            span {
-                font-weight: bold;
-            }
-        }
+			span {
+				font-weight: bold;
+			}
+		}
 	}
 }
 
 .question-detail-comment {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 10px 0;
-    row-gap: 10px;
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 10px 0;
+	row-gap: 10px;
 }
 
 .comment-vote {
-    i {
-        color: black;
-    }
+	i {
+		color: black;
+	}
 }
 
 .comment-count-profile {
-    margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: black;
-    z-index: 3;
-    position: relative;
-    background-color: white;
+	margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+	color: black;
+	z-index: 3;
+	position: relative;
+	background-color: white;
 }
 
 .comment {
-    border-radius: 10px;
-    margin-bottom: 15px;
-    animation: slideInDown 2.5s ease-out;
-    box-shadow: 0 4px 12px rgb(12 6 6 / 51%);
-    margin-top: 10px;
-    padding: 10px;
+	border-radius: 10px;
+	margin-bottom: 15px;
+	animation: slideInDown 2.5s ease-out;
+	box-shadow: 0 4px 12px rgb(12 6 6 / 51%);
+	margin-top: 10px;
+	padding: 10px;
 }
 
 @keyframes slideInDown {
-    0% {
-      transform: translateY(-50%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+	0% {
+		transform: translateY(-50%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
 
-  .question-details-container-top {
-    background-color: white;
-    position: relative;
-    z-index: 3;
-  }
+.question-details-container-top {
+	background-color: white;
+	position: relative;
+	z-index: 3;
+}
 
+@keyframes slideIn {
+	0% {
+		transform: translate(-50%, -50%) scale(0.8);
+		opacity: 0;
+	}
+	100% {
+		transform: translate(0%, 0%) scale(1);
+		opacity: 1;
+	}
+}
 
-  @keyframes slideIn {
-    0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: translate(0%, 0%) scale(1);
-        opacity: 1;
-    }
-  }
+.add-comment-area {
+	margin: 5px;
+	border: 2px solid rgb(221, 221, 221);
+	width: 300px;
+	min-width: 300px;
+}
 
-  .add-comment-area {
-    margin: 5px;
-    border: 2px solid rgb(221, 221, 221);
-    width: 300px;
-    min-width: 300px;
-  }
+.post-comment {
+	padding: 11px 20px;
+	width: fit-content;
+	margin: 5px;
+	background-color: #000000;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	animation: slideInDown 1s ease-out;
+}
 
-  .post-comment {
-    padding: 11px 20px;
-    width: fit-content;
-    margin: 5px;
-    background-color: #000000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    animation: slideInDown 1s ease-out;
-  }
+#commentForm {
+	display: flex;
+	flex-direction: column;
+}
 
-  #commentForm {
-    display: flex;
-    flex-direction: column;
-  }
+.no-comments {
+	font-size: 14px;
+	font-family: sans-serif;
+}
 
-  .no-comments {
-    font-size: 14px;
-    font-family: sans-serif;
-  }
-
-  .delete-comment {
-    padding: 6px 8px;
-    width: fit-content;
-    margin: 5px;
-    background-color: #000000;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    animation: slideInDown 1s ease-out;
-  }
+.delete-comment {
+	padding: 6px 8px;
+	width: fit-content;
+	margin: 5px;
+	background-color: #000000;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	animation: slideInDown 1s ease-out;
+}

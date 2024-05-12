@@ -1,35 +1,37 @@
 body {
-    font-family: Arial, sans-serif;
+	font-family: Arial, sans-serif;
 }
 
 form {
-    width: 300px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    height: 89%;
-    background: white;
+	width: 300px;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	height: 89%;
+	background: white;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
-    width: -webkit-fill-available;
-    padding: 8px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+	width: -webkit-fill-available;
+	padding: 8px;
+	margin-top: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 12px;
+	width: 100%;
+	padding: 10px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-top: 12px;
 }
 
 button:hover {
-    background-color: #0056b3;
+	background-color: #0056b3;
 }
