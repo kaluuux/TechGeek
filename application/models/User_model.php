@@ -39,19 +39,32 @@ class User_model extends CI_Model {
         return $query->result();
     }
 
-    public function username_exists($username, $exclude_user_id) {
+    // public function username_exists($username, $exclude_user_id) {
+    //     $this->db->from('users');
+    //     $this->db->where('username', $username);
+    //     $this->db->where('id !=', $exclude_user_id);
+    //     return $this->db->count_all_results() > 0;
+    // }
+    
+    // public function email_exists($email, $exclude_user_id) {
+    //     $this->db->from('users');
+    //     $this->db->where('email', $email);
+    //     $this->db->where('id !=', $exclude_user_id);
+    //     return $this->db->count_all_results() > 0;
+    // }
+
+    public function username_exists($username) {
         $this->db->from('users');
         $this->db->where('username', $username);
-        $this->db->where('id !=', $exclude_user_id);
         return $this->db->count_all_results() > 0;
     }
     
-    public function email_exists($email, $exclude_user_id) {
+    public function email_exists($email) {
         $this->db->from('users');
         $this->db->where('email', $email);
-        $this->db->where('id !=', $exclude_user_id);
         return $this->db->count_all_results() > 0;
     }
+    
     
     
 }

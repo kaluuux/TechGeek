@@ -6,45 +6,17 @@
     <title>User Profile</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/profile.css'); ?>">
     <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;"> -->
-    <?php $this->load->view('header', ['title' => 'Home Page']); ?>
-    <style>
-        /* Tab Styling */
-        .tab {
-            overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-        }
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 17px;
-        }
-        .tab button:hover {
-            background-color: #ddd;
-        }
-        .tab button.active {
-            background-color: #ccc;
-        }
-        .tabcontent {
-            display: none;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-    </style>
+    <?php $this->load->view('header', ['title' => 'Profile']); ?>
 </head>
 <body>
-<h1><?= htmlspecialchars($user->username) ?>'s Profile</h1>
+    <div class="user-profile">
+    <h1><?= htmlspecialchars($user->username) ?>'s Profile</h1>
     <div class="tab">
         <?php if ($is_own_profile): ?>
             <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
-        <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button>
+            <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button>
     <?php else: ?>
         <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
         <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Questions</button>
@@ -52,30 +24,31 @@
     </div>
 
     <div id="ProfileDetails" class="tabcontent">
-        <h3>Profile Details</h3>
-        <!-- Display Flash Messages -->
-        <?php if ($this->session->flashdata('error')): ?>
-            <p class="flash-message" style="color: red;"><?php echo $this->session->flashdata('error'); ?></p>
-        <?php endif; ?>
+        <div class="profile-details-wrapper">
+            <!-- <div class="profile-tabe-header"><h3>Profile Details</h3></div> -->
+            <!-- Display Flash Messages -->
+            <?php if ($this->session->flashdata('error')): ?>
+                <p class="flash-message alert-danger" style="color: red;"><?php echo $this->session->flashdata('error'); ?></p>
+            <?php endif; ?>
 
-        <?php if ($this->session->flashdata('success')): ?>
-            <p class="flash-message" style="color: green;"><?php echo $this->session->flashdata('success'); ?></p>
-        <?php endif; ?>
-        <div id="viewProfile">
-        <p>Email: <?= htmlspecialchars($user->email); ?></p>
-        <p>Joined Date: <?= date('F j, Y', strtotime($user->joined_date)); ?></p>
-        <p>First Name: <?= htmlspecialchars($user->first_name); ?></p>
-        <p>Last Name: <?= htmlspecialchars($user->last_name); ?></p>
-        <p>Mobile Number: <?= htmlspecialchars($user->mobile); ?></p>
-        <p>Address: <?= htmlspecialchars($user->address); ?></p>
+            <?php if ($this->session->flashdata('success')): ?>
+                <p class="flash-message alert-success" style="color: green;"><?php echo $this->session->flashdata('success'); ?></p>
+            <?php endif; ?>
+            <div id="viewProfile">
+                <p><span>Email:</span>  <?= htmlspecialchars($user->email); ?></p>
+                <p><span>Joined Date:</span>  <?= date('F j, Y', strtotime($user->joined_date)); ?></p>
+                <p><span>First Name:</span>  <?= htmlspecialchars($user->first_name); ?></p>
+                <p><span>Last Name:</span>  <?= htmlspecialchars($user->last_name); ?></p>
+                <p><span>Mobile Number:</span>  <?= htmlspecialchars($user->mobile); ?></p>
+                <p><span>Address:</span>  <?= htmlspecialchars($user->address); ?></p>
 
-        <?php if ($is_own_profile): ?>
-            <button onclick="toggleEditForm()">Edit</button>
-        <?php endif; ?>
-    </div>
+                <?php if ($is_own_profile): ?>
+                    <button class="edit-profile-btn" onclick="toggleEditForm()">Edit</button>
+                <?php endif; ?>
+            </div>
+        </div>
         
-        <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;">
-        <!-- Adding fields for username and email in the edit form -->
+        <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user->username); ?>" required>
             <label for="email">Email:</label>
@@ -90,7 +63,35 @@
             <textarea id="address" name="address"><?php echo htmlspecialchars($user->address); ?></textarea>
             <button type="submit">Save Changes</button>
             <button type="button" onclick="toggleEditForm()">Cancel</button>
+        </form> -->
+        <!-- Modal Backdrop -->
+<div id="modalBackdrop" class="modal-backdrop" onclick="toggleEditForm()" style="display:none;"></div>
+
+<!-- Modal Content -->
+<div id="editProfileModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h3>Edit Profile</h3>
+        <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user->username); ?>" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user->email); ?>" required>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user->first_name); ?>">
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user->last_name); ?>">
+            <label for="mobile">Mobile Number:</label>
+            <input type="text" id="mobile" name="mobile" value="<?php echo htmlspecialchars($user->mobile); ?>">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address"><?php echo htmlspecialchars($user->address); ?></textarea>
+            <div class="modal-actions">
+                <button type="submit" class="edit-profile-btn-save">Save Changes</button>
+                <button type="button" onclick="toggleEditForm()" class="edit-profile-btn-cancel">Cancel</button>
+            </div>
         </form>
+    </div>
+</div>
+
     </div>
 
     <div id="YourQuestions" class="tabcontent">
@@ -115,6 +116,7 @@
         <?php else: ?>
             <p>No questions posted yet.</p>
         <?php endif; ?>
+    </div>
     </div>
 
     <script>
@@ -181,6 +183,18 @@
                 }
             });
         }
+
+        function toggleEditForm() {
+    var modal = document.getElementById('editProfileModal');
+    var backdrop = document.getElementById('modalBackdrop');
+    if (modal.style.display === 'none') {
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
+    } else {
+        modal.style.display = 'none';
+        backdrop.style.display = 'none';
+    }
+}
 
     </script>
 </body>

@@ -1,0 +1,103 @@
+.container {
+    width: 80%;
+    margin: 10% 10% 12% 18%;
+    /* overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; */
+    /* height: 100vh; */
+    /* align-items: center; */
+}
+
+body {
+    background-color: #000000 !important;
+}
+
+.login-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.login-desc {
+    max-width: 800px;
+    /* margin: 50px auto; */
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .animate-head {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    animation: slideInDown 1s ease-out;
+  }
+  .animate-txt {
+    font-size: 1.1rem;
+    color: #666;
+    animation: fadeIn 2s ease-out;
+    transition: transform 0.3s ease; /* Smooth transition for the pop-up effect */
+  }
+  .animate-txt:hover, .login-button:hover {
+    transform: scale(0.95); /* Scale the text down slightly when hovered */
+  }
+  @keyframes slideInDown {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .login-comp {
+    box-shadow: 0 0 14px rgba(0, 0, 0, 0.1);
+  }
+
+  .login-form-field {
+    label, input {
+        font-size: 14px;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+  }
+
+  .login-txt {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: sans-serif;
+  }
+
+  .signup-link {
+    font-size: 12px;
+    font-family: sans-serif;
+
+    a {
+        color: #007BFF;
+        text-decoration: none;
+    }
+
+    a:hover {
+        transform: scale(0.95); /* Scale the text down slightly when hovered */
+    }
+  }
+
+  .alert-danger {
+    font-size: 12px;
+    font-family: sans-serif;
+    color: red;
+  }

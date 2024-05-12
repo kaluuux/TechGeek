@@ -4,14 +4,16 @@ body {
 
 form {
     width: 300px;
-    margin: 50px auto;
+    /* margin: 50px auto; */
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    height: 89%;
+    background: white;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-    width: 100%;
+    width: -webkit-fill-available;
     padding: 8px;
     margin-top: 8px;
     border: 1px solid #ccc;
