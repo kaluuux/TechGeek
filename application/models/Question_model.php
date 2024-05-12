@@ -8,36 +8,18 @@ class Question_model extends CI_Model {
         $query = $this->db->get('questions');
         return $query->result();
     }
-    
 
     public function add_question($data) {
-        // Insert the question into the database
-        $this->db->insert('questions', $data);
+        $result = $this->db->insert('questions', $data);
+        return $this->db->affected_rows() > 0;  // Check if any rows were actually inserted
     }
+    
 
     public function increment_view_count($question_id) {
         $this->db->set('view_count', 'view_count+1', FALSE);
         $this->db->where('id', $question_id);
         $this->db->update('questions');
     }
-
-    // public function get_question_details($question_id) {
-    //     // First, get the question details along with the username from the users table
-    //     $this->db->select('questions.*, users.username, questions.view_count, COUNT(comments.id) as comment_count');
-    //     $this->db->from('questions');
-    //     $this->db->join('users', 'users.id = questions.user_id');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');  // Ensure comments are joined to count them
-    //     $this->db->where('questions.id', $question_id);
-    //     $this->db->group_by('questions.id');
-    //     $question = $this->db->get()->row();
-    
-    //     // Check if the question exists before trying to increment the view count
-    //     if ($question) {
-    //         $this->increment_view_count($question_id);
-    //     }
-    
-    //     return $question;
-    // }
 
     public function get_question_details($question_id, $user_id) {
         $this->db->select('questions.*, users.username, questions.view_count, COUNT(comments.id) as comment_count, 
@@ -85,39 +67,6 @@ class Question_model extends CI_Model {
         $row = $query->row();
         return $row->downvotes;
     }
-
-    // public function cast_vote($question_id, $user_id, $vote_type) {
-    //     // Check existing vote
-    //     $this->db->where('question_id', $question_id);
-    //     $this->db->where('user_id', $user_id);
-    //     $existing_vote = $this->db->get('votes')->row();
-
-    //     // Start transaction
-    //     $this->db->trans_start();
-
-    //     if ($existing_vote) {
-    //         // Update existing vote if different
-    //         if ($existing_vote->vote_type !== $vote_type) {
-    //             $this->db->where('id', $existing_vote->id);
-    //             $this->db->update('votes', ['vote_type' => $vote_type]);
-    //         }
-    //     } else {
-    //         // Insert new vote
-    //         $this->db->insert('votes', [
-    //             'question_id' => $question_id,
-    //             'user_id' => $user_id,
-    //             'vote_type' => $vote_type
-    //         ]);
-    //     }
-
-    //     // Update question vote counts
-    //     $this->update_vote_counts($question_id);
-
-    //     // Complete transaction
-    //     $this->db->trans_complete();
-
-    //     return $this->db->trans_status();
-    // }
 
     public function cast_vote($question_id, $user_id, $vote_type) {
         $this->db->where('question_id', $question_id);
@@ -187,24 +136,6 @@ class Question_model extends CI_Model {
         $this->db->order_by('created_at', 'DESC');
         return $this->db->get('questions')->result();
     }
-
-    // public function get_filtered_questions($order_by = 'created_at DESC', $search_query = '') {
-    //     $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments');
-    //     $this->db->from('questions');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-    //     $this->db->join('users', 'users.id = questions.user_id', 'left');  // Ensure left join here
-    
-    //     if (!empty($search_query)) {
-    //         $this->db->group_start();
-    //         $this->db->like('questions.title', $search_query);
-    //         $this->db->or_like('users.username', $search_query);
-    //         $this->db->group_end();
-    //     }
-    
-    //     $this->db->group_by('questions.id');
-    //     $this->db->order_by($order_by);
-    //     return $this->db->get()->result();
-    // }
     
     public function get_filtered_questions($order_by = 'created_at DESC', $search_query = '') {
         $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments, COUNT(DISTINCT comments.id) AS comment_count');
@@ -242,60 +173,7 @@ class Question_model extends CI_Model {
         }
         return true;
     }
-     
-    
-    // public function get_recent_questions_with_comments() {
-    //     $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(comment_users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments');
-    //     $this->db->from('questions');
-    //     $this->db->join('users', 'users.id = questions.user_id', 'left');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-    //     $this->db->join('users as comment_users', 'comment_users.id = comments.user_id', 'left');
-    //     $this->db->group_by('questions.id');
-    //     $this->db->order_by('questions.created_at', 'DESC');
-    //     $query = $this->db->get();
-    //     log_message('debug', 'Fetching questions with comments: ' . $this->db->last_query());
-    //     return $query->result();
 
-    // }
-    
-    // public function get_recent_questions_with_comments($order_by = 'created_at DESC') {
-    //     $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(comment_users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments');
-    //     $this->db->from('questions');
-    //     $this->db->join('users', 'users.id = questions.user_id', 'left');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-    //     $this->db->join('users as comment_users', 'comment_users.id = comments.user_id', 'left');
-    //     $this->db->group_by('questions.id');
-    //     $this->db->order_by($order_by);
-    //     $query = $this->db->get();
-    //     log_message('debug', 'Fetching questions with comments: ' . $this->db->last_query());
-    //     return $query->result();
-    // }
-    
-    
-    // public function get_recent_questions_with_comments($order_by = 'created_at DESC') {
-    //     $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(comment_users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments, COUNT(DISTINCT comments.id) AS comment_count');
-    //     $this->db->from('questions');
-    //     $this->db->join('users', 'users.id = questions.user_id', 'left');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-    //     $this->db->join('users as comment_users', 'comment_users.id = comments.user_id', 'left');
-    //     $this->db->group_by('questions.id');
-    //     $this->db->order_by($order_by);
-    //     $query = $this->db->get();
-    //     log_message('debug', 'Fetching questions with comments and comment count: ' . $this->db->last_query());
-    //     return $query->result();
-    // }
-
-    // public function get_recent_questions_with_comments() {
-    //     $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(comment_users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments, COUNT(DISTINCT comments.id) AS comment_count, questions.created_at');
-    //     $this->db->from('questions');
-    //     $this->db->join('users', 'users.id = questions.user_id', 'left');
-    //     $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-    //     $this->db->join('users as comment_users', 'comment_users.id = comments.user_id', 'left');
-    //     $this->db->group_by('questions.id');
-    //     $this->db->order_by('questions.created_at', 'DESC');
-    //     log_message('debug', 'Fetching questions with comments and comment count: ' . $this->db->last_query());
-    //     return $this->db->get()->result();
-    // }
     public function get_recent_questions_with_comments($order_by = 'created_at DESC') {
         $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(comment_users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments, COUNT(DISTINCT comments.id) AS comment_count, questions.created_at');
         $this->db->from('questions');
@@ -352,13 +230,6 @@ class Question_model extends CI_Model {
         return false;
     }
     
-    // public function delete_comment($comment_id, $user_id) {
-    //     $this->db->where('id', $comment_id);
-    //     $this->db->where('user_id', $user_id); // Ensure the user owns the comment
-    //     $this->db->delete('comments');
-    //     return $this->db->affected_rows() > 0;
-    // }
-    
     public function get_comment_count_by_question($question_id) {
         $this->db->where('question_id', $question_id);
         $this->db->from('comments');
@@ -375,5 +246,86 @@ class Question_model extends CI_Model {
         }
         return null; // Return null if no question is associated with the comment
     }
+
+    public function upvote_comment($comment_id) {
+        $this->db->set('upvotes', 'upvotes+1', FALSE);
+        $this->db->where('id', $comment_id);
+        $this->db->update('comments');
+    }
+    
+    public function downvote_comment($comment_id) {
+        $this->db->set('downvotes', 'downvotes+1', FALSE);
+        $this->db->where('id', $comment_id);
+        $this->db->update('comments');
+    }
+    
+    public function get_comment_by_id($comment_id) {
+        $this->db->select('*');
+        $this->db->from('comments');
+        $this->db->where('id', $comment_id);
+        $query = $this->db->get();
+    
+        if ($query->num_rows() > 0) {
+            return $query->row();
+        } else {
+            return NULL;
+        }
+    }
+
+    public function cast_comment_vote($comment_id, $user_id, $vote_type) {
+        $this->db->where('comment_id', $comment_id);
+        $this->db->where('user_id', $user_id);
+        $existing_vote = $this->db->get('comment_votes')->row();
+    
+        $this->db->trans_start(); // Start transaction
+    
+        if ($existing_vote) {
+            if ($existing_vote->vote_type === $vote_type) {
+                // If the same type of vote is cast, remove the vote (toggle effect)
+                $this->db->where('id', $existing_vote->id);
+                $this->db->delete('comment_votes');
+            } else {
+                // If a different vote is cast, update the existing record
+                $this->db->where('id', $existing_vote->id);
+                $this->db->update('comment_votes', ['vote_type' => $vote_type]);
+            }
+        } else {
+            // If no existing vote, insert a new vote
+            $this->db->insert('comment_votes', [
+                'comment_id' => $comment_id,
+                'user_id' => $user_id,
+                'vote_type' => $vote_type
+            ]);
+        }
+    
+        // Update comment vote counts
+        $this->update_comment_vote_counts($comment_id);
+    
+        $this->db->trans_complete(); // End transaction
+    
+        if ($this->db->trans_status() === FALSE) {
+            return FALSE;
+        } else {
+            return $this->get_comment_vote_count($comment_id);
+        }
+    }
+    
+    private function update_comment_vote_counts($comment_id) {
+        // Calculate upvotes and downvotes
+        $upvotes = $this->db->where(['comment_id' => $comment_id, 'vote_type' => 'up'])->from('comment_votes')->count_all_results();
+        $downvotes = $this->db->where(['comment_id' => $comment_id, 'vote_type' => 'down'])->from('comment_votes')->count_all_results();
+    
+        // Update the comment record
+        $this->db->where('id', $comment_id)->update('comments', ['upvotes' => $upvotes, 'downvotes' => $downvotes]);
+    }
+    
+    public function get_comment_vote_count($comment_id) {
+        $this->db->select('upvotes, downvotes');
+        $this->db->from('comments');
+        $this->db->where('id', $comment_id);
+        return $this->db->get()->row();
+    }
+    
+    
     
 }

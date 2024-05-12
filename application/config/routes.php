@@ -63,3 +63,8 @@ $route['question/downvote/(:any)'] = 'question/downvote/$1';
 $route['user/profile'] = 'user/profile';
 $route['user/update_profile'] = 'user/update_profile';
 $route['user/profile/(:num)'] = 'user/profile/$1';
+$route['question/upvote_comment/(:any)'] = 'question/upvote_comment/$1';
+$route['question/downvote_comment/(:any)'] = 'question/downvote_comment/$1';
+$route['api/questions'] = 'api/questions';
+$route['api/post_question'] = 'api/post_question';
+

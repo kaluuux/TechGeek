@@ -42,8 +42,6 @@
 <body>
 <h1><?= htmlspecialchars($user->username) ?>'s Profile</h1>
     <div class="tab">
-        <!-- <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
-        <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button> -->
         <?php if ($is_own_profile): ?>
             <button class="tablinks" onclick="openTab(event, 'ProfileDetails')">Profile Details</button>
         <button class="tablinks" onclick="openTab(event, 'YourQuestions')">Your Questions</button>
@@ -63,16 +61,6 @@
         <?php if ($this->session->flashdata('success')): ?>
             <p class="flash-message" style="color: green;"><?php echo $this->session->flashdata('success'); ?></p>
         <?php endif; ?>
-        <!-- <div id="viewProfile">
-            <p>Username: <?php echo htmlspecialchars($user->username); ?></p>
-            <p>Email: <?php echo htmlspecialchars($user->email); ?></p>
-            <p>Joined Date: <?php echo htmlspecialchars(date('F j, Y', strtotime($user->joined_date))); ?></p>
-            <p>First Name: <?php echo htmlspecialchars($user->first_name); ?></p>
-            <p>Last Name: <?php echo htmlspecialchars($user->last_name); ?></p>
-            <p>Mobile Number: <?php echo htmlspecialchars($user->mobile); ?></p>
-            <p>Address: <?php echo htmlspecialchars($user->address); ?></p>
-            <button onclick="toggleEditForm()">Edit</button>
-        </div> -->
         <div id="viewProfile">
         <p>Email: <?= htmlspecialchars($user->email); ?></p>
         <p>Joined Date: <?= date('F j, Y', strtotime($user->joined_date)); ?></p>
@@ -121,7 +109,6 @@
                     <?php if ($is_own_profile): ?>
                         <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button>
         <?php endif; ?>
-                    <!-- <button onclick="deleteQuestion(<?= $question->id; ?>)">Delete</button> -->
                 </p>
                 <?php endforeach; ?>
             </ul>
@@ -171,57 +158,29 @@
             }
         }
 
-//         function deleteQuestion(questionId) {
-//     if (!confirm("Are you sure you want to delete this question?")) {
-//         return;
-//     }
-
-//     $.ajax({
-//         url: '<?php echo base_url("question/delete/"); ?>' + questionId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             console.log('Success response:', response);
-//             if (response.success) {
-//                 alert("Question deleted successfully!");
-//                 location.reload(); // Reload the page to update the list
-//             } else {
-//                 alert("Failed to delete the question.");
-//             }
-//         },
-//         error: function(xhr, status, error) {
-//             console.error('AJAX Error:', xhr.responseText);
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
-function deleteQuestion(questionId) {
-    if (!confirm('Are you sure you want to delete this question?')) {
-        return; // Stop the function if the user cancels.
-    }
-
-    $.ajax({
-        url: '<?= base_url("question/delete/"); ?>' + questionId,
-        type: 'POST',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                // Remove the question element from the page
-                $('#question_' + questionId).remove();
-                alert('Question deleted successfully!');
-            } else {
-                alert('Failed to delete the question.');
+        function deleteQuestion(questionId) {
+            if (!confirm('Are you sure you want to delete this question?')) {
+                return; // Stop the function if the user cancels.
             }
-        },
-        error: function(xhr, status, error) {
-            alert('Error: ' + xhr.responseText);
+
+            $.ajax({
+                url: '<?= base_url("question/delete/"); ?>' + questionId,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the question element from the page
+                        $('#question_' + questionId).remove();
+                        alert('Question deleted successfully!');
+                    } else {
+                        alert('Failed to delete the question.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
         }
-    });
-}
-
-
-
-
 
     </script>
 </body>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/home.css'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
     <title>Home Page</title>
-    <!-- <a href="<?php echo base_url('auth/logout'); ?>">Logout</a> -->
     <?php $this->load->view('header', ['title' => 'Home Page']); ?>
     <style>
         .upvote-group.active, .downvote-group.active {
@@ -49,13 +48,21 @@
             <div id="questionModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <form action="<?php echo base_url('question/add'); ?>" method="post">
+                    <!-- <form action="<?php echo base_url('question/add'); ?>" method="post">
                         <label for="title">Question Title:</label><br>
                         <input type="text" id="title" name="title" required><br>
                         <label for="description">Question Description:</label><br>
                         <textarea id="description" name="description" rows="4" required></textarea><br>
                         <button type="submit">Submit</button>
-                    </form>
+                    </form> -->
+                    <form id="questionForm">
+    <label for="title">Question Title:</label>
+    <input type="text" id="title" name="title" required><br>
+    <label for="description">Question Description:</label>
+    <textarea id="description" name="description" required></textarea><br>
+    <button type="submit">Submit</button>
+</form>
+
                 </div>
             </div>
         <?php else: ?>
@@ -76,7 +83,6 @@
                 <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                     <?php echo $question->title; ?>
                 </a>
-                <!-- <p><i class="fas fa-at"></i><?php echo $question->username; ?></p> -->
                 <p><a href="<?php echo base_url('user/profile/' . $question->user_id); ?>"><i class="fas fa-at"></i> <?php echo $question->username; ?></a></p>
                 <p>Date: <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
             </div>
@@ -86,34 +92,15 @@
                     <span class="downvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'down' ? 'active' : '' ?>" id="downvote_group_<?php echo $question->id; ?>"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down"></i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
                 </div>
                 <div id="comments">
-                    <!-- <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p> -->
                     <p><i class="far fa-comment"></i> <?php echo isset($question->comment_count) ? $question->comment_count : '0'; ?></p>
-
-                    <!-- <?php if (isset($question->comments) && !empty($question->comments)): ?>
-                        <?php $comments = explode("|||", $question->comments); ?>
-                        <?php foreach ($comments as $comment): ?>
-                            <div class="comment">
-                                <p><?php echo htmlspecialchars($comment); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No comments yet.</p>
-                    <?php endif; ?> -->
                 </div>
-                <?php if ($logged_in): ?>
-                    <!-- <form class="commentForm" onsubmit="postComment(event, this); return false;">
-                        <input type="hidden" name="question_id" value="<?php echo $question->id; ?>">
-                        <textarea name="comment" required></textarea>
-                        <button type="submit">Post Comment</button>
-                    </form> -->
-
-                <?php endif; ?>
 
                 <div class="question-card-views">
                     <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
                 </div>
             </div>
         </div>
+
         <?php endforeach; ?>
         <?php else: ?>
         <?php foreach($questions as $question): ?>
@@ -132,47 +119,58 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-//         function upvoteQuestion(questionId) {
-//     $.ajax({
-//         url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.error) {
-//                 alert(response.error);
-//             } else {
-//                 $('#upvotes_' + questionId).text(response.upvotes);
-//                 $('#downvotes_' + questionId).text(response.downvotes);
-//                 $('#upvote_group_' + questionId).addClass('active');
-//                 $('#downvote_group_' + questionId).removeClass('active');
-//             }
-//         },
-//         error: function(xhr, status, error) {
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
 
-// function downvoteQuestion(questionId) {
-//     $.ajax({
-//         url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.error) {
-//                 alert(response.error);
-//             } else {
-//                 $('#upvotes_' + questionId).text(response.upvotes);
-//                 $('#downvotes_' + questionId).text(response.downvotes);
-//                 $('#downvote_group_' + questionId).addClass('active');
-//                 $('#upvote_group_' + questionId).removeClass('active');
-//             }
-//         },
-//         error: function(xhr, status, error) {
-//             alert('Error: ' + error);
-//         }
-//     });
-// }
+
+
+$(document).ready(function() {
+    $('#questionForm').submit(function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: '<?= base_url("api/post_question"); ?>',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Question added successfully');
+                    document.getElementById('questionModal').style.display = 'none';
+                    window.location.reload();
+                    $('#questionForm')[0].reset(); // Reset the form fields
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Failed to submit question. Please try again.');
+            }
+        });
+    });
+
+    // Reset form when closing the modal with the X button or clicking outside the modal
+    var modal = document.getElementById('questionModal');
+    var btn = document.getElementById('openModal');
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function() {
+        modal.style.display = "block";
+    };
+
+    span.onclick = function() {
+        modal.style.display = "none";
+        $('#questionForm')[0].reset();
+    };
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            $('#questionForm')[0].reset();
+        }
+    };
+});
+
+
 
 function upvoteQuestion(questionId) {
     $.ajax({
@@ -262,28 +260,28 @@ function downvoteQuestion(questionId) {
         }
 
         function handleVote(response, questionId) {
-    if (response.error) {
-        alert(response.error);
-    } else {
-        $('#upvotes_' + questionId).text(response.upvotes);
-        $('#downvotes_' + questionId).text(response.downvotes);
-        // Update the UI based on the current vote
-        switch(response.currentVote) {
-            case 'up':
-                $('#upvote_group_' + questionId).addClass('active');
-                $('#downvote_group_' + questionId).removeClass('active');
-                break;
-            case 'down':
-                $('#downvote_group_' + questionId).addClass('active');
-                $('#upvote_group_' + questionId).removeClass('active');
-                break;
-            default:
-                $('#upvote_group_' + questionId).removeClass('active');
-                $('#downvote_group_' + questionId).removeClass('active');
-                break;
+            if (response.error) {
+                alert(response.error);
+            } else {
+                $('#upvotes_' + questionId).text(response.upvotes);
+                $('#downvotes_' + questionId).text(response.downvotes);
+                // Update the UI based on the current vote
+                switch(response.currentVote) {
+                    case 'up':
+                        $('#upvote_group_' + questionId).addClass('active');
+                        $('#downvote_group_' + questionId).removeClass('active');
+                        break;
+                    case 'down':
+                        $('#downvote_group_' + questionId).addClass('active');
+                        $('#upvote_group_' + questionId).removeClass('active');
+                        break;
+                    default:
+                        $('#upvote_group_' + questionId).removeClass('active');
+                        $('#downvote_group_' + questionId).removeClass('active');
+                        break;
+                }
+            }
         }
-    }
-}
 
 
     </script>

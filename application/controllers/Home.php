@@ -32,7 +32,6 @@ class Home extends CI_Controller {
         if (!empty($search_query)) {
             $data['questions'] = $this->Question_model->get_filtered_questions($order_by, $search_query);
         } else {
-            // $data['questions'] = $this->Question_model->get_recent_questions_with_comments();
             $data['questions'] = $this->Question_model->get_recent_questions_with_comments($order_by);
         }
         $data['logged_in'] = $this->session->userdata('logged_in');

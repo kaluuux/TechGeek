@@ -9,26 +9,29 @@
     <title>Question Details</title>
 </head>
 <body>
-    <!-- <h1>Question Details</h1> -->
     <h2><?php echo $question->title; ?></h2>
     <p><i class="fas fa-at"></i><?php echo $question->username; ?></p>
     <p><i class="fas fa-calendar"></i> <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
     <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
     <p><?php echo $question->description; ?></p>
-    <!-- <h3>Comments: <p><i class="far fa-comment"></i> <?php echo $question->comment_count; ?></p></h3> -->
     <h3>Comments: <span id="comment_count"><?= $comment_count; ?></span></h3>
 
     <div id="comments">
         <?php if (!empty($comments)): ?>
             <?php foreach ($comments as $comment): ?>
-                <!-- <div class="comment">
-                    <p><span style="font-weight: 700;"><?php echo $comment->username; ?> : </span><span><?php echo htmlspecialchars($comment->comment); ?></span></p>
-                    <?php if ($comment->user_id == $this->session->userdata('user_id')): ?>
-                        <button onclick="deleteComment(<?= $comment->id; ?>)">Delete</button>
-                    <?php endif; ?>
-                </div> -->
                 <div id="comment_<?= $comment->id ?>" class="comment">
-                <p><span style="font-weight: 700;"><?php echo $comment->username; ?> : </span><span><?php echo htmlspecialchars($comment->comment); ?></span></p>
+                    <p><span style="font-weight: 700;"><?php echo $comment->username; ?> : </span><span><?php echo htmlspecialchars($comment->comment); ?></span></p>
+                    <div class="comment-vote">
+                        <a href="#" class="upvote-comment" onclick="upvoteComment(<?= $comment->id; ?>); return false;">
+                            <i class="fas fa-arrow-up"></i>
+                        </a>
+                        <span id="upvotes_comment_<?= $comment->id; ?>"><?= $comment->upvotes; ?></span>
+                        <a href="#" class="downvote-comment" onclick="downvoteComment(<?= $comment->id; ?>); return false;">
+                            <i class="fas fa-arrow-down"></i>
+                        </a>
+                        <span id="downvotes_comment_<?= $comment->id; ?>"><?= $comment->downvotes; ?></span>
+                    </div>
+
                     <?php if ($comment->user_id == $this->session->userdata('user_id')): ?>
                         <button onclick="deleteComment(<?= $comment->id; ?>)">Delete</button>
                     <?php endif; ?>
@@ -63,51 +66,6 @@
      
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-// function upvoteQuestion(questionId) {
-//     $.ajax({
-//         url: '<?php echo base_url('question/upvote/'); ?>' + questionId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.error) {
-//                 alert(response.error);
-//             } else {
-//                 // Update vote counts
-//                 $('#upvotes_' + questionId).text(response.upvotes);
-//                 $('#downvotes_' + questionId).text(response.downvotes);
-//                 // Handle active class for vote buttons
-//                 $('#upvote_group_' + questionId).addClass('active');
-//                 $('#downvote_group_' + questionId).removeClass('active');
-//             }
-//         },
-//         error: function(xhr) {
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
-
-// function downvoteQuestion(questionId) {
-//     $.ajax({
-//         url: '<?php echo base_url('question/downvote/'); ?>' + questionId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.error) {
-//                 alert(response.error);
-//             } else {
-//                 // Update vote counts
-//                 $('#upvotes_' + questionId).text(response.upvotes);
-//                 $('#downvotes_' + questionId).text(response.downvotes);
-//                 // Handle active class for vote buttons
-//                 $('#downvote_group_' + questionId).addClass('active');
-//                 $('#upvote_group_' + questionId).removeClass('active');
-//             }
-//         },
-//         error: function(xhr) {
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
 
 function handleVote(response, questionId) {
     $('#upvotes_' + questionId).text(response.upvotes);
@@ -174,49 +132,91 @@ function downvoteQuestion(questionId) {
         });
     }
 
-//     function deleteComment(commentId) {
-//     if (!confirm('Are you sure you want to delete this comment?')) {
-//         return; // Stop if the user cancels the deletion.
-//     }
+        function deleteComment(commentId) {
+                if (!confirm('Are you sure you want to delete this comment?')) {
+                return; // Stop if the user cancels the deletion.
+            }
+            $.ajax({
+                url: '<?= base_url("question/delete_comment/"); ?>' + commentId,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Remove the comment from the DOM
+                        $('#comment_' + commentId).remove();
+                        // Update the comment count display for the associated question
+                        $('#comment_count').text(response.new_comment_count);  // Correctly target the element with ID 'comment_count'
+                    } else {
+                        alert('Failed to delete comment: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        }
 
+//         function upvoteComment(commentId) {
 //     $.ajax({
-//         url: '<?= base_url("question/delete_comment/"); ?>' + commentId,
+//         url: '<?= base_url("question/upvote_comment/"); ?>' + commentId,
 //         type: 'POST',
 //         dataType: 'json',
 //         success: function(response) {
-//             if (response.success) {
-//                 // Remove the comment element from the page
-//                 $('#comment_' + commentId).fadeOut(400, function() {
-//                     $(this).remove(); // This line ensures the comment is not only hidden but removed from DOM
-//                 });
-//                 alert('Comment deleted successfully!');
-//             } else {
-//                 alert(response.message || 'Failed to delete the comment.');
+//             if (response.upvotes != undefined) {
+//                 $('#upvotes_comment_' + commentId).text(response.upvotes);
 //             }
 //         },
-//         error: function(xhr, status, error) {
+//         error: function(xhr) {
 //             alert('Error: ' + xhr.responseText);
 //         }
 //     });
 // }
 
-function deleteComment(commentId) {
-        if (!confirm('Are you sure you want to delete this comment?')) {
-        return; // Stop if the user cancels the deletion.
+// function downvoteComment(commentId) {
+//     $.ajax({
+//         url: '<?= base_url("question/downvote_comment/"); ?>' + commentId,
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function(response) {
+//             if (response.downvotes != undefined) {
+//                 $('#downvotes_comment_' + commentId).text(response.downvotes);
+//             }
+//         },
+//         error: function(xhr) {
+//             alert('Error: ' + xhr.responseText);
+//         }
+//     });
+// }
+
+function handleVoteUpdate(commentId, response) {
+    // Update both upvotes and downvotes regardless of which was clicked
+    if (response.upvotes != undefined && response.downvotes != undefined) {
+        $('#upvotes_comment_' + commentId).text(response.upvotes);
+        $('#downvotes_comment_' + commentId).text(response.downvotes);
     }
+}
+
+function upvoteComment(commentId) {
     $.ajax({
-        url: '<?= base_url("question/delete_comment/"); ?>' + commentId,
+        url: '<?= base_url("question/upvote_comment/"); ?>' + commentId,
         type: 'POST',
         dataType: 'json',
         success: function(response) {
-            if (response.success) {
-                // Remove the comment from the DOM
-                $('#comment_' + commentId).remove();
-                // Update the comment count display for the associated question
-                $('#comment_count').text(response.new_comment_count);  // Correctly target the element with ID 'comment_count'
-            } else {
-                alert('Failed to delete comment: ' + response.message);
-            }
+            handleVoteUpdate(commentId, response);
+        },
+        error: function(xhr) {
+            alert('Error: ' + xhr.responseText);
+        }
+    });
+}
+
+function downvoteComment(commentId) {
+    $.ajax({
+        url: '<?= base_url("question/downvote_comment/"); ?>' + commentId,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            handleVoteUpdate(commentId, response);
         },
         error: function(xhr) {
             alert('Error: ' + xhr.responseText);
