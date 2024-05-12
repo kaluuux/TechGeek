@@ -262,7 +262,6 @@ function downvoteQuestion(questionId) {
             } else {
                 $('#upvotes_' + questionId).text(response.upvotes);
                 $('#downvotes_' + questionId).text(response.downvotes);
-                // Update the UI based on the current vote
                 switch(response.currentVote) {
                     case 'up':
                         $('#upvote_group_' + questionId).addClass('active');

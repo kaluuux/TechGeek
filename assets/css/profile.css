@@ -118,7 +118,7 @@ textarea {
 
 button.edit-profile-btn,
 .edit-profile-btn-save {
-	padding: 10px 20px;
+	padding: 11px 20px;
 	margin-right: 10px;
 	background-color: #000000;
 	color: white;
@@ -141,6 +141,7 @@ button.edit-profile-btn:hover,
 	border: 1px solid #000000;
 	border-radius: 4px;
 	cursor: pointer;
+    animation: slideInDown 1s ease-out;
 
 	&:hover {
 		background-color: #3d3d3d;
@@ -153,12 +154,11 @@ button.edit-profile-btn:hover,
 	flex-direction: column;
 	flex-wrap: wrap;
 	row-gap: 4px;
-	/* transform: scale(0.95); */
 
 	.profile-question-card {
 		border: 1px solid;
 		border-radius: 10px;
-		margin: 0;
+		margin: 20px;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		display: flex;
 		padding: 15px;

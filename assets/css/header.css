@@ -57,10 +57,6 @@ body {
 .main-nav ul li a:hover, .main-nav ul li a:focus {
     text-decoration: underline;
     transform: scale(1.03);
-
-    /* i:hover{
-        transform: scale(1.03);
-    } */
 }
 
 .logo-component {
@@ -70,7 +66,6 @@ body {
     img {
         width: 100px;
         height: auto;
-        /* margin-right: 10px; */
     }
 }
 

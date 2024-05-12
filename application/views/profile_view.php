@@ -76,11 +76,6 @@
     </div>
 
     <div id="YourQuestions" class="tabcontent">
-    <!-- <?php if ($is_own_profile): ?>
-        <h3>Your Questions</h3>
-    <?php else: ?>
-        <h3>Questions</h3>
-    <?php endif; ?> -->
         <?php if (!empty($questions)): ?>
             <div class="profile-question-wrap">
                 <?php foreach ($questions as $question): ?>
@@ -118,7 +113,6 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
 
-            // Clear messages when tab is switched
             // clearMessages();
         }
 
@@ -143,7 +137,7 @@
 
         function deleteQuestion(questionId) {
             if (!confirm('Are you sure you want to delete this question?')) {
-                return; // Stop the function if the user cancels.
+                return;
             }
 
             $.ajax({
@@ -152,7 +146,6 @@
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        // Remove the question element from the page
                         $('#question_' + questionId).remove();
                         alert('Question deleted successfully!');
                     } else {

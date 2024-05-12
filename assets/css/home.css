@@ -1,17 +1,24 @@
- /* Styling for question cards */
+ body {
+  background: linear-gradient(to right, #f0f2f5, #ffffff);
+ }
+ /* question cards */
   div.question-card {
     background-color: #ffffff;
     border: 1px solid #d1d1d1;
     border-radius: 10px;
     padding: 20px;
-    margin: 20px; /* Space between cards */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-    transition: box-shadow 0.3s ease;
-    max-width: 40%;
+    margin: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     animation: slideInDown 2s ease-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
 
     hr {
       border: none;
@@ -46,7 +53,7 @@
   }
   
   .question-card:hover {
-    box-shadow: 0 8px 12px rgba(0,0,0,0.15); /* Enhanced shadow on hover */
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
     transform: scale(1.02);
   }
   
@@ -106,7 +113,7 @@
     background-color: #218838;
   }
 
-/* The Close Button */
+/* Close Button */
 .close {
   color: #aaa;
   float: right;
@@ -267,6 +274,30 @@ padding: 50px;
   max-width: 500px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   width: fit-content;
+  animation: slideIn .5s forwards;
+}
+
+@keyframes slideIn {
+  0% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+  }
+  100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+  }
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .modal-content {
@@ -296,6 +327,7 @@ button.edit-profile-btn, .edit-profile-btn-save {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button.edit-profile-btn:hover, .edit-profile-btn-save:hover {
@@ -310,9 +342,21 @@ button.edit-profile-btn:hover, .edit-profile-btn-save:hover {
   border: 1px solid #000000;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  animation: slideInDown 1s ease-out;
 
   &:hover {
       background-color: #3d3d3d;
       color: #ffffff;
+  }
+}
+
+@media (max-width: 768px) {
+  .question-card {
+      max-width: 100%;
+  }
+
+  .home-view-top, .search-form {
+      flex-direction: column;
   }
 }
