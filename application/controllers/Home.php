@@ -5,12 +5,12 @@ class Home extends CI_Controller {
 
     public function index() {
         $this->load->model('Question_model');
-        $search_query = $this->input->get('search_query', TRUE); // Fetch search query, default to TRUE to allow empty strings
+        $search_query = $this->input->get('search_query', TRUE);
         
-        $sort = $this->input->get('sort', TRUE); // Fetch sort query, default to TRUE to allow empty strings
+        $sort = $this->input->get('sort', TRUE);
     
     if (empty($sort)) {
-        $sort = 'recent';  // Default sort option
+        $sort = 'recent';
     }
 
     switch ($sort) {
@@ -25,7 +25,7 @@ class Home extends CI_Controller {
             break;
         default:
             $order_by = 'created_at DESC';
-            $sort = 'recent'; // Ensure the default sort is correctly set if not matched
+            $sort = 'recent';
             break;
 
         }

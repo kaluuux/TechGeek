@@ -26,23 +26,20 @@ $(document).ready(function () {
 
 		submitForm: function (event) {
 			event.preventDefault();
-			// var loginUrl = this.$el.data('login-url');
 			var loginUrl = $('#loginFormContainer').data('url');
 
-			// Basic validation checks
 			var email = this.$("#email").val().trim();
 			var password = this.$("#password").val().trim();
 
 			if (!email) {
 				alert("Please enter your email.");
-				return; // Stop processing the form submission
+				return;
 			}
 			if (!password) {
 				alert("Please enter your password.");
-				return; // Stop processing the form submission
+				return;
 			}
 
-			// If all validations pass, set the model and log data (or send to server)
 			var loginData = { email: email, password: password };
 			this.model.set(loginData);
 			console.log("Login submitted with:", this.model.toJSON());
@@ -53,16 +50,14 @@ $(document).ready(function () {
 				data: {
 					email: email,
 					password: password,
-					csrf_token_name: csrfToken  // Assuming CSRF protection is enabled and token name is 'csrf_token_name'
+					csrf_token_name: csrfToken
 				},
 				dataType: "json",
 				success: function(response) {
 					if (response.success) {
 						window.location.href = response.redirect;
 					} else {
-						// Display the error message directly in the HTML
 						var errorHtml = '<div class="alert alert-danger">' + response.message + '</div>';
-						// Append error message before the login button
 						$('#actualLoginForm .login-button').before(errorHtml);
 					}
 				},

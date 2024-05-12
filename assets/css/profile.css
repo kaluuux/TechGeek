@@ -3,8 +3,8 @@
 	border: 1px solid #ccc;
 	background-color: #f1f1f1;
 	border-radius: 20px 20px 0px 0px;
-    z-index: 2;
-    position: relative;
+	z-index: 2;
+	position: relative;
 }
 .tab button {
 	background-color: inherit;
@@ -65,7 +65,7 @@
 			font-family: sans-serif;
 		}
 
-        animation: slideInDown 1s ease-out;
+		animation: slideInDown 1s ease-out;
 	}
 }
 
@@ -125,7 +125,7 @@ button.edit-profile-btn,
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
-    animation: slideInDown 1s ease-out;
+	animation: slideInDown 1s ease-out;
 }
 
 button.edit-profile-btn:hover,
@@ -141,7 +141,7 @@ button.edit-profile-btn:hover,
 	border: 1px solid #000000;
 	border-radius: 4px;
 	cursor: pointer;
-    animation: slideInDown 1s ease-out;
+	animation: slideInDown 1s ease-out;
 
 	&:hover {
 		background-color: #3d3d3d;
@@ -162,43 +162,43 @@ button.edit-profile-btn:hover,
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		display: flex;
 		padding: 15px;
-        justify-content: space-between;
-        animation: slideInDown 1s ease-out;
-        z-index: 1;
+		justify-content: space-between;
+		animation: slideInDown 1s ease-out;
+		z-index: 1;
 
-        button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+		button {
+			padding: 10px 20px;
+			margin-right: 10px;
+			background-color: #000000;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
 
-            &:hover {
-                background-color: #3d3d3d;
-                color: #ffffff;
-                transform: scale(0.98);
-            }
-        }
+			&:hover {
+				background-color: #3d3d3d;
+				color: #ffffff;
+				transform: scale(0.98);
+			}
+		}
 	}
 }
 
 @keyframes slideInDown {
-    0% {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

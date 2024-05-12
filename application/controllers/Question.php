@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Question extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        // Load the necessary model
         $this->load->model('Question_model');
     }
     
@@ -12,7 +11,6 @@ class Question extends CI_Controller {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $user_id = $this->session->userdata('user_id'); // Get user ID from session
-        // $user_id = $this->session->userdata('user_id');
         log_message('debug', 'User ID from session: ' . $user_id);
         log_message('debug', 'Session user_id: ' . $this->session->userdata('user_id'));
 
@@ -21,7 +19,7 @@ class Question extends CI_Controller {
         $data = array(
             'title' => $title,
             'description' => $description,
-            'user_id' => $user_id // Include the user ID
+            'user_id' => $user_id
         );
         
         $this->Question_model->add_question($data);
@@ -116,7 +114,7 @@ class Question extends CI_Controller {
     }
 
     public function delete($question_id) {
-        $user_id = $this->session->userdata('user_id'); // Ensure the user is logged in
+        $user_id = $this->session->userdata('user_id');
         if (!$user_id) {
             echo json_encode(['success' => false]);
             return;
@@ -138,7 +136,7 @@ class Question extends CI_Controller {
             return;
         }
     
-        // Retrieve the question_id associated with the comment before deletion, if needed
+        // Retrieve the question_id associated with the comment before deletion
         $question_id = $this->Question_model->get_question_id_by_comment($comment_id);
     
         if ($this->Question_model->delete_comment($comment_id, $user_id)) {
@@ -165,7 +163,5 @@ class Question extends CI_Controller {
         } else {
             echo json_encode(['error' => 'User not logged in.']);
         }
-    }
-    
-    
+    }  
 }

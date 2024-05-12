@@ -7,7 +7,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/profile.css'); ?>">
-    <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;"> -->
     <?php $this->load->view('header', ['title' => 'Profile']); ?>
 </head>
 <body>
@@ -45,10 +44,7 @@
                 <?php endif; ?>
             </div>
         </div>
-        <!-- Modal Backdrop -->
 <div id="modalBackdrop" class="modal-backdrop" onclick="toggleEditForm()" style="display:none;"></div>
-
-<!-- Modal Content -->
 <div id="editProfileModal" class="modal" style="display:none;">
     <div class="modal-content">
         <h3>Edit Profile</h3>

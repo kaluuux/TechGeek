@@ -19,7 +19,6 @@
             <p><i class="fas fa-calendar"></i> <?php echo date('F j, Y, h:i A', strtotime($question->created_at)); ?></p>
             <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
         </div>
-        <!-- <hr> -->
         <div class="question-details-desc"></div>
             <p class="desc"><?php echo $question->description; ?></p>
         </div>
