@@ -9,25 +9,12 @@ class Question_model extends CI_Model {
         return $query->result();
     }
 
-    // public function add_question($data) {
-    //     $result = $this->db->insert('questions', $data);
-    //     return $this->db->affected_rows() > 0;  // Check if any rows were actually inserted
-    // }
-
     public function add_question($data) {
         $this->db->insert('questions', $data);
         log_message('debug', 'Last Query: ' . $this->db->last_query()); // Check the actual executed SQL
         log_message('debug', 'Session user_id: ' . $this->session->userdata('user_id'));
         return $this->db->affected_rows() > 0;
     }
-    
-
-    // public function add_question($data) {
-    //     $this->db->insert('questions', $data);
-    //     return $this->db->affected_rows() > 0;
-    // }
-    
-    
 
     public function increment_view_count($question_id) {
         $this->db->set('view_count', 'view_count+1', FALSE);
@@ -45,15 +32,13 @@ class Question_model extends CI_Model {
         $this->db->where('questions.id', $question_id);
         $question = $this->db->get()->row();
         
-                // Check if the question exists before trying to increment the view count
+        // Check if the question exists
         if ($question) {
             $this->increment_view_count($question_id);
         }
         return $question;
     }
-    
-    
-    
+
     public function upvote_question($question_id) {
         $this->db->set('upvotes', 'upvotes+1', FALSE);
         $this->db->where('id', $question_id);
@@ -86,22 +71,20 @@ class Question_model extends CI_Model {
         $this->db->where('question_id', $question_id);
         $this->db->where('user_id', $user_id);
         $existing_vote = $this->db->get('votes')->row();
-    
-        // Start transaction
+
         $this->db->trans_start();
-        $currentVote = null;  // Variable to track the current vote status
+        $currentVote = null;
     
         if ($existing_vote) {
             if ($existing_vote->vote_type === $vote_type) {
-                // Remove vote if it's the same type, meaning the user is retracting their vote
                 $this->db->where('id', $existing_vote->id);
                 $this->db->delete('votes');
-                $currentVote = 'none'; // No current vote after deletion
+                $currentVote = 'none';
             } else {
                 // Update existing vote if different
                 $this->db->where('id', $existing_vote->id);
                 $this->db->update('votes', ['vote_type' => $vote_type]);
-                $currentVote = $vote_type; // Set to the new vote type
+                $currentVote = $vote_type;
             }
         } else {
             // Insert new vote
@@ -110,16 +93,13 @@ class Question_model extends CI_Model {
                 'user_id' => $user_id,
                 'vote_type' => $vote_type
             ]);
-            $currentVote = $vote_type; // Set to the new vote type
+            $currentVote = $vote_type;
         }
-    
-        // Update question vote counts
+
         $this->update_vote_counts($question_id);
     
-        // Complete transaction
         $this->db->trans_complete();
     
-        // Determine the result status and include the current vote status
         $status = $this->db->trans_status();
         return ['status' => $status, 'currentVote' => $currentVote];
     }
@@ -144,9 +124,9 @@ class Question_model extends CI_Model {
     public function search_questions($search_query) {
         if (!empty($search_query)) {
             $this->db->like('title', $search_query);
-            $this->db->or_like('username', $search_query);  // Assume 'username' is available in 'questions' table, or adjust as needed based on your schema
+            $this->db->or_like('username', $search_query);
         }
-        $this->db->join('users', 'users.id = questions.user_id');  // Join with the users table to access usernames
+        $this->db->join('users', 'users.id = questions.user_id');
         $this->db->order_by('created_at', 'DESC');
         return $this->db->get('questions')->result();
     }
@@ -155,7 +135,7 @@ class Question_model extends CI_Model {
         $this->db->select('questions.*, COALESCE(users.username, \'Anonymous\') as username, GROUP_CONCAT(DISTINCT CONCAT(COALESCE(users.username, \'Anonymous\'), ": ", comments.comment) SEPARATOR "|||") as comments, COUNT(DISTINCT comments.id) AS comment_count');
         $this->db->from('questions');
         $this->db->join('comments', 'comments.question_id = questions.id', 'left');
-        $this->db->join('users', 'users.id = questions.user_id', 'left');  // Ensure left join here
+        $this->db->join('users', 'users.id = questions.user_id', 'left');
     
         if (!empty($search_query)) {
             $this->db->group_start();
@@ -195,7 +175,7 @@ class Question_model extends CI_Model {
         $this->db->join('comments', 'comments.question_id = questions.id', 'left');
         $this->db->join('users as comment_users', 'comment_users.id = comments.user_id', 'left');
         $this->db->group_by('questions.id');
-        $this->db->order_by($order_by); // Ensure dynamic sorting based on the parameter
+        $this->db->order_by($order_by);
         return $this->db->get()->result();
     }
 
@@ -212,16 +192,14 @@ class Question_model extends CI_Model {
     }
     
     public function delete_question($question_id, $user_id) {
-        // Verify ownership before attempting delete
         $this->db->where('id', $question_id);
         $this->db->where('user_id', $user_id);
         $query = $this->db->get('questions');
     
         if ($query->num_rows() != 1) {
             log_message('error', 'No question found, or it does not belong to the user');
-            return false; // Either no question found, or it doesn't belong to the user
+            return false; // no question found
         }
-        // Attempt to delete the question
         $this->db->where('id', $question_id);
         $this->db->where('user_id', $user_id);
         if ($this->db->delete('questions')) {
@@ -257,7 +235,7 @@ class Question_model extends CI_Model {
         if ($query->num_rows() > 0) {
             return $query->row()->question_id;
         }
-        return null; // Return null if no question is associated with the comment
+        return null;
     }
 
     public function upvote_comment($comment_id) {
@@ -290,15 +268,13 @@ class Question_model extends CI_Model {
         $this->db->where('user_id', $user_id);
         $existing_vote = $this->db->get('comment_votes')->row();
     
-        $this->db->trans_start(); // Start transaction
+        $this->db->trans_start();
     
         if ($existing_vote) {
             if ($existing_vote->vote_type === $vote_type) {
-                // If the same type of vote is cast, remove the vote (toggle effect)
                 $this->db->where('id', $existing_vote->id);
                 $this->db->delete('comment_votes');
             } else {
-                // If a different vote is cast, update the existing record
                 $this->db->where('id', $existing_vote->id);
                 $this->db->update('comment_votes', ['vote_type' => $vote_type]);
             }
@@ -314,7 +290,7 @@ class Question_model extends CI_Model {
         // Update comment vote counts
         $this->update_comment_vote_counts($comment_id);
     
-        $this->db->trans_complete(); // End transaction
+        $this->db->trans_complete();
     
         if ($this->db->trans_status() === FALSE) {
             return FALSE;
@@ -337,8 +313,5 @@ class Question_model extends CI_Model {
         $this->db->from('comments');
         $this->db->where('id', $comment_id);
         return $this->db->get()->row();
-    }
-    
-    
-    
+    } 
 }

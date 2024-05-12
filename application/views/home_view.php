@@ -45,10 +45,6 @@
 
                 </div>
             </div>
-        <?php else: ?>
-            <!-- Prompt to Log In -->
-            <!-- <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p> -->
-            <!-- <button href="<?php echo base_url('login'); ?>">Join</button> -->
         <?php endif; ?>
     </div>
     </div>
@@ -108,7 +104,6 @@
                     <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
                 </div>
             </div>
-            <!-- <a href="<?php echo base_url('login'); ?>">View Question</a> -->
         </div>
         <?php endforeach; ?>
         <?php endif; ?>
@@ -134,7 +129,7 @@ $(document).ready(function() {
                     alert('Question added successfully');
                     document.getElementById('questionModal').style.display = 'none';
                     window.location.reload();
-                    $('#questionForm')[0].reset(); // Reset the form fields
+                    $('#questionForm')[0].reset();
                 } else {
                     alert('Error: ' + response.error);
                 }
@@ -145,7 +140,7 @@ $(document).ready(function() {
         });
     });
 
-    // Reset form when closing the modal with the X button or clicking outside the modal
+    // Reset form when closing the modal
     var modal = document.getElementById('questionModal');
     var btn = document.getElementById('openModal');
     var span = document.getElementsByClassName("close")[0];
@@ -175,7 +170,7 @@ function upvoteQuestion(questionId) {
         type: 'POST',
         dataType: 'json',
         success: function(response) {
-            handleVote(response, questionId); // Call handleVote here
+            handleVote(response, questionId);
         },
         error: function(xhr, status, error) {
             alert('Error: ' + xhr.responseText);
@@ -189,7 +184,7 @@ function downvoteQuestion(questionId) {
         type: 'POST',
         dataType: 'json',
         success: function(response) {
-            handleVote(response, questionId); // Call handleVote here
+            handleVote(response, questionId);
         },
         error: function(xhr, status, error) {
             alert('Error: ' + error);
@@ -198,26 +193,15 @@ function downvoteQuestion(questionId) {
 }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Get the modal
             var modal = document.getElementById('questionModal');
-
-            // Get the button that opens the modal
             var btn = document.getElementById('openModal');
-
-            // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("close")[0];
-
-            // When the user clicks the button, open the modal 
             btn.onclick = function() {
                 modal.style.display = "block";
             }
-
-            // When the user clicks on <span> (x), close the modal
             span.onclick = function() {
                 modal.style.display = "none";
             }
-
-            // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
@@ -232,7 +216,7 @@ function downvoteQuestion(questionId) {
 
         function postComment(event, formElement) {
             event.preventDefault(); // Prevent the default form submit action
-            var formData = $(formElement).serialize(); // Serialize the data from the specific form
+            var formData = $(formElement).serialize();
 
             $.ajax({
                 url: '<?php echo base_url('question/post_comment'); ?>',
@@ -241,10 +225,10 @@ function downvoteQuestion(questionId) {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        var username = "Your Username"; // Assuming you have the username available as discussed previously
+                        var username = "Your Username";
                         var newCommentHtml = '<div class="comment"><p><strong>' + username + ':</strong> ' + $(formElement).find('textarea[name="comment"]').val() + '</p></div>';
                         $(formElement).closest('.question-card').find('#comments').append(newCommentHtml);
-                        $(formElement).find('textarea[name="comment"]').val(''); // Clear the textarea
+                        $(formElement).find('textarea[name="comment"]').val('');
                         alert('Comment posted!');
                     } else {
                         alert('Error: ' + (response.error || 'Unknown error'));
@@ -283,4 +267,5 @@ function downvoteQuestion(questionId) {
     </script>
 
 </body>
+<footer><?php $this->load->view('header', ['title' => 'Home']); ?></footer>
 </html>

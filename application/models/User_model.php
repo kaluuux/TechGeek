@@ -3,9 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends CI_Model {
 
     public function create_user($data) {
-        return $this->db->insert('users', $data);  // This will return TRUE on success and FALSE on failure
+        return $this->db->insert('users', $data);
     }
-    
 
     public function update_user($user_id, $data) {
         $this->db->where('id', $user_id);
@@ -20,10 +19,10 @@ class User_model extends CI_Model {
 
     public function authenticate($email, $password) {
         $this->db->where('email', $email);
-        $this->db->where('password', md5($password)); // Consider using better hashing like password_hash() in the future
+        $this->db->where('password', md5($password));
         $query = $this->db->get('users');
         if ($query->num_rows() == 1) {
-            return $query->row();  // Return the entire user object
+            return $query->row();
         }
         return false;
     }
@@ -50,8 +49,5 @@ class User_model extends CI_Model {
         $this->db->from('users');
         $this->db->where('email', $email);
         return $this->db->count_all_results() > 0;
-    }
-    
-    
-    
+    }  
 }

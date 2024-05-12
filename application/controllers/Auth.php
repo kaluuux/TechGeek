@@ -15,23 +15,22 @@ class Auth extends CI_Controller {
         // Check if username already exists
         if ($this->User_model->username_exists($username)) {
             $this->session->set_flashdata('error', 'Username already exists.');
-            redirect('signup'); // Make sure to redirect back to the registration form
+            redirect('signup');
         }
     
         // Check if email already exists
         if ($this->User_model->email_exists($email)) {
             $this->session->set_flashdata('error', 'Email already in use.');
-            redirect('signup'); // Make sure to redirect back to the registration form
+            redirect('signup');
         }
     
-        // If checks pass, proceed with registration
         $data = [
             'username' => $username,
             'email' => $email,
             'password' => md5($password) // Hash the password with md5
         ];
         if ($this->User_model->create_user($data)) {
-            redirect('login');  // Redirect to login page after successful registration
+            redirect('login');
         } else {
             log_message('error', 'Failed to insert user data: ' . print_r($data, TRUE));
             $this->session->set_flashdata('error', 'Unable to register. Please try again.');
@@ -46,7 +45,7 @@ class Auth extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('User_model');  // Check this line carefully
+        $this->load->model('User_model');
     }
 
     public function login_process() {
