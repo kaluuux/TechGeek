@@ -31,6 +31,7 @@ class Api extends CI_Controller {
     public function post_question() {
         $title = $this->input->post('title', TRUE); // XSS clean
         $description = $this->input->post('description', TRUE);
+        $user_id = $this->session->userdata('user_id'); // Get user ID from session
 
         if (empty($title) || empty($description)) {
             $this->output->set_output(json_encode(['error' => 'Missing title or description']));
@@ -40,7 +41,7 @@ class Api extends CI_Controller {
         $data = array(
             'title' => $title,
             'description' => $description,
-            'user_id' => 1 // Assuming a static user_id for now, replace with actual user ID
+            'user_id' => $user_id // Assuming a static user_id for now, replace with actual user ID
         );
 
         $result = $this->Question_model->add_question($data);

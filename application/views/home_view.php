@@ -7,27 +7,11 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/home.css'); ?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/voting.css'); ?>">
     <title>Home Page</title>
-    <?php $this->load->view('header', ['title' => 'Home Page']); ?>
-    <style>
-        .upvote-group.active, .downvote-group.active {
-        background-color: #4CAF50;
-        color: white;
-        }
-
-        .upvote-group:hover,
-        .downvote-group:hover {
-            background-color: #cacaca;
-        }
-
-        .upvote-group a, .downvote-group a {
-            text-decoration: none;
-            color: inherit;
-        }
-    </style>
+    <?php $this->load->view('header', ['title' => 'Home']); ?>
 </head>
 <body>
     <div class="home-view-top">
-    <div>
+    <div class="sort-drop">
         <select id="sortQuestions" onchange="sortQuestions()">
             <option value="recent" <?php echo ($sort == 'recent') ? 'selected' : ''; ?>>Most Recent</option>
             <option value="most_upvotes" <?php echo ($sort == 'most_upvotes') ? 'selected' : ''; ?>>Most Upvotes</option>
@@ -43,39 +27,34 @@
     </form>
     <div class="add-question">
         <?php if ($logged_in): ?>
-            <button id="openModal">Ask a Question</button>
+            <button class="add-question" id="openModal">Ask a Question</button>
             <!-- Modal -->
             <div id="questionModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <!-- <form action="<?php echo base_url('question/add'); ?>" method="post">
-                        <label for="title">Question Title:</label><br>
-                        <input type="text" id="title" name="title" required><br>
-                        <label for="description">Question Description:</label><br>
-                        <textarea id="description" name="description" rows="4" required></textarea><br>
-                        <button type="submit">Submit</button>
-                    </form> -->
+                    <h2>Ask a Question</h2>
                     <form id="questionForm">
-    <label for="title">Question Title:</label>
-    <input type="text" id="title" name="title" required><br>
-    <label for="description">Question Description:</label>
-    <textarea id="description" name="description" required></textarea><br>
-    <button type="submit">Submit</button>
-</form>
+                        <label for="title">Question Title:</label>
+                        <input type="text" id="title" name="title" required><br>
+                        <label for="description">Question Description:</label>
+                        <textarea id="description" name="description" required></textarea><br>
+                        <div class="modal-actions">
+                        <button type="submit">Submit</button>
+                        </div>
+                    </form>
 
                 </div>
             </div>
         <?php else: ?>
             <!-- Prompt to Log In -->
-            <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p>
+            <!-- <p>Please <a href="<?php echo base_url('login'); ?>">login</a> to post a question.</p> -->
+            <!-- <button href="<?php echo base_url('login'); ?>">Join</button> -->
         <?php endif; ?>
     </div>
     </div>
     <div>
-    <h1>Recent Questions</h1>
-    <!-- Button to open modal -->
     </div>
-    <div>
+    <div class="question-wrapper">
     <?php if ($logged_in): ?>
         <?php foreach($questions as $question): ?>
         <div class="question-card">
@@ -83,9 +62,13 @@
                 <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                     <?php echo $question->title; ?>
                 </a>
-                <p><a href="<?php echo base_url('user/profile/' . $question->user_id); ?>"><i class="fas fa-at"></i> <?php echo $question->username; ?></a></p>
-                <p>Date: <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
             </div>
+            <hr>
+            <div class="question-card-info">
+                <p class="username">Asked  <a href="<?php echo base_url('user/profile/' . $question->user_id); ?>"><i class="fas fa-at"></i> <?php echo $question->username; ?></a></p>
+                <p  class="calender"><i class="fas fa-calendar"></i> <?php echo date('F j, Y, h:i A', strtotime($question->created_at)); ?></p>
+            </div>
+            <p class="question-desc"><?php echo $question->description; ?></p>
             <div class="question-interaction-comp">
                 <div class="question-card-vote">
                     <span class="upvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'up' ? 'active' : '' ?>" id="upvote_group_<?php echo $question->id; ?>"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up"></i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
@@ -105,13 +88,27 @@
         <?php else: ?>
         <?php foreach($questions as $question): ?>
         <div class="question-card">
-        <p>Asked by: <?php echo $question->username; ?></p>
             <div class="question-card-title"><?php echo $question->title; ?></div>
-            <div class="question-card-vote">
-                <span class="upvote-group"><a href="<?php echo base_url('login'); ?>" class="upvote"><i class="fas fa-arrow-up">Up-Vote</i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
-                <span class="downvote-group"><a href="<?php echo base_url('login'); ?>" class="downvote"><i class="fas fa-arrow-down">Down-Vote</i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
+            <hr>
+            <div class="question-card-info">
+                <p class="username">Asked  <i class="fas fa-at"></i>  <a href="<?php echo base_url('login'); ?>"><?php echo $question->username; ?></a></p>
+                <p class="calender"><i class="fas fa-calendar"></i> <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
             </div>
-            <a href="<?php echo base_url('login'); ?>">View Question</a>
+            <p class="question-desc"><?php echo $question->description; ?></p>
+            <div class="question-interaction-comp">
+                <div class="question-card-vote">
+                        <span href="<?php echo base_url('login'); ?>" class="upvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'up' ? 'active' : '' ?>" id="upvote_group_<?php echo $question->id; ?>"><a href="#" class="upvote" onclick="upvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-up"></i></a><span id="upvotes_<?php echo $question->id; ?>"><?php echo $question->upvotes; ?></span></span>
+                        <span href="<?php echo base_url('login'); ?>" class="downvote-group <?= isset($user_votes[$question->id]) && $user_votes[$question->id] == 'down' ? 'active' : '' ?>" id="downvote_group_<?php echo $question->id; ?>"><a href="#" class="downvote" onclick="downvoteQuestion(<?php echo $question->id; ?>); return false;"><i class="fas fa-arrow-down"></i></a><span id="downvotes_<?php echo $question->id; ?>"><?php echo $question->downvotes; ?></span></span>
+                </div>
+                <div id="comments">
+                    <p><i class="far fa-comment"></i> <?php echo isset($question->comment_count) ? $question->comment_count : '0'; ?></p>
+                </div>
+
+                <div class="question-card-views">
+                    <p><i class="far fa-eye"></i> <?php echo $question->view_count; ?></p>
+                </div>
+            </div>
+            <!-- <a href="<?php echo base_url('login'); ?>">View Question</a> -->
         </div>
         <?php endforeach; ?>
         <?php endif; ?>
@@ -265,7 +262,6 @@ function downvoteQuestion(questionId) {
             } else {
                 $('#upvotes_' + questionId).text(response.upvotes);
                 $('#downvotes_' + questionId).text(response.downvotes);
-                // Update the UI based on the current vote
                 switch(response.currentVote) {
                     case 'up':
                         $('#upvote_group_' + questionId).addClass('active');

@@ -3,19 +3,27 @@ body {
     line-height: 1.6;
     background-color: #f4f4f4;
     color: #333;
+    margin: 0 !important;
 }
 
-.container {
+.header-container {
     width: 80%;
     margin: auto;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .main-header {
-    background-color: #333;
+    background-color: #000000;
     color: #fff;
     padding-top: 10px;
     min-height: 70px;
+    border-bottom: 1px solid #ffffff;
+    box-shadow: 0 10px 10px rgb(255 255 255 / 10%);
+    z-index: 2;
+    position: relative;
 }
 
 .main-header a {
@@ -27,14 +35,18 @@ body {
 
 .logo {
     float: left;
+    margin: 0 !important;
 }
 
 .main-nav {
     float: right;
+    display: flex;
+    align-items: center;
 }
 
 .main-nav ul {
     list-style: none;
+    margin: 0 !important;
 }
 
 .main-nav ul li {
@@ -44,5 +56,38 @@ body {
 
 .main-nav ul li a:hover, .main-nav ul li a:focus {
     text-decoration: underline;
+    transform: scale(1.03);
 }
 
+.logo-component {
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 100px;
+        height: auto;
+    }
+}
+
+h1.logo{    
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    animation: slideInDown 2.5s ease-out;
+}
+
+.logo-header {
+    animation: spin 2.5s linear forwards;
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .logo-header:hover {
+    animation: spin 2s linear infinite;
+  }

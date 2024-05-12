@@ -60,14 +60,17 @@ $(document).ready(function () {
 					if (response.success) {
 						window.location.href = response.redirect;
 					} else {
-						alert('Login failed: ' + (response.message || 'No error message provided'));
+						// Display the error message directly in the HTML
+						var errorHtml = '<div class="alert alert-danger">' + response.message + '</div>';
+						// Append error message before the login button
+						$('#actualLoginForm .login-button').before(errorHtml);
 					}
 				},
 				error: function(xhr, textStatus, error) {
 					console.log("AJAX Error:", textStatus + ': ' + error);
 					console.log("Response was:", xhr.responseText);
 					alert("Login failed. Please try again later.");
-				}
+				}				
 			});
 		},
 	});

@@ -10,19 +10,13 @@
             <div class="header-container">
                 <div class="logo-component">
                     <img class="logo-header loading" src="<?php echo base_url('assets/img/logo.png'); ?>" alt="TechGeek">
-                    <a href="<?php echo base_url('home'); ?>">TechGeek</a>
-                </h1>
+                    <h1 class="logo">
+                        <a href="<?php echo base_url('home'); ?>">TechGeek</a>
+                    </h1>
                 </div>
                 <nav class="main-nav">
                     <ul>
                         <li><a href="<?php echo base_url('home'); ?>">Home</a></li>
-                        <?php if ($this->session->userdata('logged_in')): ?>
-                            <li><a href="<?php echo base_url('auth/logout'); ?>">Logout</a></li>
-                            <li><a href="<?php echo base_url('user/profile'); ?>"><i class="far fa-user"></i></a></li>
-                        <?php else: ?>
-                            <li><a href="<?php echo base_url('auth/login'); ?>">Login</a></li>
-                            <li><a href="<?php echo base_url('auth/signup'); ?>">Sign Up</a></li>
-                        <?php endif; ?>
                     </ul>
                 </nav>
             </div>
