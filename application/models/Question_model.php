@@ -9,10 +9,24 @@ class Question_model extends CI_Model {
         return $query->result();
     }
 
+    // public function add_question($data) {
+    //     $result = $this->db->insert('questions', $data);
+    //     return $this->db->affected_rows() > 0;  // Check if any rows were actually inserted
+    // }
+
     public function add_question($data) {
-        $result = $this->db->insert('questions', $data);
-        return $this->db->affected_rows() > 0;  // Check if any rows were actually inserted
+        $this->db->insert('questions', $data);
+        log_message('debug', 'Last Query: ' . $this->db->last_query()); // Check the actual executed SQL
+        log_message('debug', 'Session user_id: ' . $this->session->userdata('user_id'));
+        return $this->db->affected_rows() > 0;
     }
+    
+
+    // public function add_question($data) {
+    //     $this->db->insert('questions', $data);
+    //     return $this->db->affected_rows() > 0;
+    // }
+    
     
 
     public function increment_view_count($question_id) {
@@ -184,7 +198,6 @@ class Question_model extends CI_Model {
         $this->db->order_by($order_by); // Ensure dynamic sorting based on the parameter
         return $this->db->get()->result();
     }
-    
 
     public function get_user_votes($user_id) {
         $this->db->select('question_id, vote_type');

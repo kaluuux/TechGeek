@@ -12,12 +12,18 @@ class Question extends CI_Controller {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $user_id = $this->session->userdata('user_id'); // Get user ID from session
+        // $user_id = $this->session->userdata('user_id');
+        log_message('debug', 'User ID from session: ' . $user_id);
+        log_message('debug', 'Session user_id: ' . $this->session->userdata('user_id'));
+
+
     
         $data = array(
             'title' => $title,
             'description' => $description,
             'user_id' => $user_id // Include the user ID
         );
+        
         $this->Question_model->add_question($data);
         redirect('home');
     }

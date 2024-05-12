@@ -156,38 +156,6 @@ function downvoteQuestion(questionId) {
             });
         }
 
-//         function upvoteComment(commentId) {
-//     $.ajax({
-//         url: '<?= base_url("question/upvote_comment/"); ?>' + commentId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.upvotes != undefined) {
-//                 $('#upvotes_comment_' + commentId).text(response.upvotes);
-//             }
-//         },
-//         error: function(xhr) {
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
-
-// function downvoteComment(commentId) {
-//     $.ajax({
-//         url: '<?= base_url("question/downvote_comment/"); ?>' + commentId,
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function(response) {
-//             if (response.downvotes != undefined) {
-//                 $('#downvotes_comment_' + commentId).text(response.downvotes);
-//             }
-//         },
-//         error: function(xhr) {
-//             alert('Error: ' + xhr.responseText);
-//         }
-//     });
-// }
-
 function handleVoteUpdate(commentId, response) {
     // Update both upvotes and downvotes regardless of which was clicked
     if (response.upvotes != undefined && response.downvotes != undefined) {

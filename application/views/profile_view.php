@@ -25,8 +25,6 @@
 
     <div id="ProfileDetails" class="tabcontent">
         <div class="profile-details-wrapper">
-            <!-- <div class="profile-tabe-header"><h3>Profile Details</h3></div> -->
-            <!-- Display Flash Messages -->
             <?php if ($this->session->flashdata('error')): ?>
                 <p class="flash-message alert-danger" style="color: red;"><?php echo $this->session->flashdata('error'); ?></p>
             <?php endif; ?>
@@ -47,23 +45,6 @@
                 <?php endif; ?>
             </div>
         </div>
-        
-        <!-- <form id="editProfileForm" action="<?php echo base_url('user/update_profile'); ?>" method="post" style="display:none;">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user->username); ?>" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user->email); ?>" required>
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user->first_name); ?>">
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user->last_name); ?>">
-            <label for="mobile">Mobile Number:</label>
-            <input type="text" id="mobile" name="mobile" value="<?php echo htmlspecialchars($user->mobile); ?>">
-            <label for="address">Address:</label>
-            <textarea id="address" name="address"><?php echo htmlspecialchars($user->address); ?></textarea>
-            <button type="submit">Save Changes</button>
-            <button type="button" onclick="toggleEditForm()">Cancel</button>
-        </form> -->
         <!-- Modal Backdrop -->
 <div id="modalBackdrop" class="modal-backdrop" onclick="toggleEditForm()" style="display:none;"></div>
 

@@ -66,7 +66,7 @@
             <hr>
             <div class="question-card-info">
                 <p class="username">Asked  <a href="<?php echo base_url('user/profile/' . $question->user_id); ?>"><i class="fas fa-at"></i> <?php echo $question->username; ?></a></p>
-                <p  class="calender"><i class="fas fa-calendar"></i> <?php echo date('F j, Y', strtotime($question->created_at)); ?></p>
+                <p  class="calender"><i class="fas fa-calendar"></i> <?php echo date('F j, Y, h:i A', strtotime($question->created_at)); ?></p>
             </div>
             <p class="question-desc"><?php echo $question->description; ?></p>
             <div class="question-interaction-comp">
