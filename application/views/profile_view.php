@@ -76,15 +76,15 @@
     </div>
 
     <div id="YourQuestions" class="tabcontent">
-    <?php if ($is_own_profile): ?>
+    <!-- <?php if ($is_own_profile): ?>
         <h3>Your Questions</h3>
     <?php else: ?>
         <h3>Questions</h3>
-    <?php endif; ?>
+    <?php endif; ?> -->
         <?php if (!empty($questions)): ?>
-            <ul>
+            <div class="profile-question-wrap">
                 <?php foreach ($questions as $question): ?>
-                    <p id="question_<?= $question->id ?>">
+                    <p class="profile-question-card" id="question_<?= $question->id ?>">
                     <a href="<?php echo base_url('question/details/' . $question->id); ?>">
                         <?php echo htmlspecialchars($question->title); ?>
                     </a>
@@ -93,7 +93,7 @@
         <?php endif; ?>
                 </p>
                 <?php endforeach; ?>
-            </ul>
+                    </div>
         <?php else: ?>
             <p>No questions posted yet.</p>
         <?php endif; ?>

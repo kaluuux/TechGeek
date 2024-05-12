@@ -1,16 +1,4 @@
-/* Reset and Body styling for a clean look */
-/* body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    color: #333;
-
-    header ~ * {
-      padding: 10px;
-    }
-  } */
-
-  /* Styling for question cards */
+ /* Styling for question cards */
   div.question-card {
     background-color: #ffffff;
     border: 1px solid #d1d1d1;
@@ -23,6 +11,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    animation: slideInDown 2s ease-out;
 
     hr {
       border: none;
@@ -34,6 +23,25 @@
     p {
       font-family: sans-serif;
       color: #000000;
+    }
+  }
+
+  @keyframes slideInDown {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
     }
   }
   
@@ -60,7 +68,6 @@
 
   .question-card-info {
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
     font-size: 12px;
     gap: 15px;
@@ -92,43 +99,12 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       margin-top: 20px;
       width: fit-content;
-      /* display: flex;
-    flex-direction: column; */
     }
   }
-  
-  /* Form and button styling for consistency */
-  /* form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-top: 20px;
-  } */
-  
-  /* input[type="text"], textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  } */
-  
-  /* button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  } */
   
   button:hover {
     background-color: #218838;
   }
-
-
 
 /* The Close Button */
 .close {
@@ -152,10 +128,10 @@
   justify-content: space-evenly;
   align-items: center;
   background: #000000;
+  z-index: 2;
+  position: relative;
     padding: 20px;
-    /* border-radius: 8px; */
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    /* margin-top: 20px; */
 }
 
 .search-form{
@@ -211,12 +187,10 @@
 }
 }
 select:hover, input[type="text"]:hover, button:hover {
-    /* border-color: #000000; */
     cursor: pointer;
 }
 select:focus, input[type="text"]:focus {
     outline: none;
-    /* border-color: #0056b3; */
     box-shadow: 0 0 5px #aacbff;
 }
 
@@ -259,7 +233,6 @@ button:hover {
   button:hover {
     background-color: #cfcfcf;
     color: #000000;
-    /* transform: scale(0.99); */
     border: 1px solid #000000;
 }
 }

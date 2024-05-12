@@ -22,6 +22,8 @@ body {
     min-height: 70px;
     border-bottom: 1px solid #ffffff;
     box-shadow: 0 10px 10px rgb(255 255 255 / 10%);
+    z-index: 2;
+    position: relative;
 }
 
 .main-header a {
