@@ -1,13 +1,16 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Question extends CI_Controller {
-    public function __construct() {
+class Question extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Question_model');
     }
-    
-    public function add() {
+
+    public function add()
+    {
         $title = $this->input->post('title');
         $description = $this->input->post('description');
         $user_id = $this->session->userdata('user_id'); // Get user ID from session
@@ -15,24 +18,25 @@ class Question extends CI_Controller {
         log_message('debug', 'Session user_id: ' . $this->session->userdata('user_id'));
 
 
-    
+
         $data = array(
             'title' => $title,
             'description' => $description,
             'user_id' => $user_id
         );
-        
+
         $this->Question_model->add_question($data);
         redirect('home');
     }
 
-    public function details($question_id) {
+    public function details($question_id)
+    {
         $user_id = $this->session->userdata('user_id');
         $question = $this->Question_model->get_question_details($question_id, $user_id);
         $comments = $this->Question_model->get_comments_by_question($question_id);
-        $comment_count = $this->Question_model->get_comment_count_by_question($question_id); // Retrieve the count of comments
+        $comment_count = $this->Question_model->get_comment_count_by_question($question_id);
         $logged_in = $this->session->userdata('logged_in');
-        
+
         $this->load->view('question_details', [
             'question' => $question,
             'comments' => $comments,
@@ -41,7 +45,8 @@ class Question extends CI_Controller {
         ]);
     }
 
-    public function upvote($question_id) {
+    public function upvote($question_id)
+    {
         if ($this->session->userdata('logged_in')) {
             $user_id = $this->session->userdata('user_id');
             $result = $this->Question_model->cast_vote($question_id, $user_id, 'up');
@@ -59,8 +64,9 @@ class Question extends CI_Controller {
             echo json_encode(['error' => 'User not logged in.']);
         }
     }
-    
-    public function downvote($question_id) {
+
+    public function downvote($question_id)
+    {
         if ($this->session->userdata('logged_in')) {
             $user_id = $this->session->userdata('user_id');
             $result = $this->Question_model->cast_vote($question_id, $user_id, 'down');
@@ -78,34 +84,35 @@ class Question extends CI_Controller {
             echo json_encode(['error' => 'User not logged in.']);
         }
     }
-    
 
-    public function post_comment() {
+
+    public function post_comment()
+    {
         try {
             $question_id = $this->input->post('question_id');
             $comment = $this->input->post('comment');
             $user_id = $this->session->userdata('user_id');
-    
+
             if (!$user_id) {
                 throw new Exception('User not logged in');
             }
-    
+
             if (empty($comment)) {
                 throw new Exception('Comment cannot be empty');
             }
-    
+
             $data = [
                 'question_id' => $question_id,
                 'user_id' => $user_id,
                 'comment' => $comment
             ];
-    
+
             $this->load->model('Question_model');
             $inserted = $this->Question_model->add_comment($data);
             if (!$inserted) {
                 throw new Exception('Failed to insert the comment');
             }
-    
+
             echo json_encode(['success' => true]);
         } catch (Exception $e) {
             log_message('error', 'Error posting comment: ' . $e->getMessage());
@@ -113,13 +120,14 @@ class Question extends CI_Controller {
         }
     }
 
-    public function delete($question_id) {
+    public function delete($question_id)
+    {
         $user_id = $this->session->userdata('user_id');
         if (!$user_id) {
             echo json_encode(['success' => false]);
             return;
         }
-    
+
         $this->load->model('Question_model');
         $result = $this->Question_model->delete_question($question_id, $user_id);
         if ($result) {
@@ -129,25 +137,26 @@ class Question extends CI_Controller {
         }
     }
 
-    public function delete_comment($comment_id) {
+    public function delete_comment($comment_id)
+    {
         $user_id = $this->session->userdata('user_id');
         if (!$user_id) {
             echo json_encode(['success' => false, 'message' => 'User not logged in']);
             return;
         }
-    
-        // Retrieve the question_id associated with the comment before deletion
+
         $question_id = $this->Question_model->get_question_id_by_comment($comment_id);
-    
+
         if ($this->Question_model->delete_comment($comment_id, $user_id)) {
             $new_comment_count = $this->Question_model->get_comment_count_by_question($question_id);
             echo json_encode(['success' => true, 'new_comment_count' => $new_comment_count, 'question_id' => $question_id]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to delete comment']);
         }
-    }  
+    }
 
-    public function upvote_comment($comment_id) {
+    public function upvote_comment($comment_id)
+    {
         if ($this->session->userdata('logged_in')) {
             $response = $this->Question_model->cast_comment_vote($comment_id, $this->session->userdata('user_id'), 'up');
             echo json_encode($response);
@@ -155,13 +164,14 @@ class Question extends CI_Controller {
             echo json_encode(['error' => 'User not logged in.']);
         }
     }
-    
-    public function downvote_comment($comment_id) {
+
+    public function downvote_comment($comment_id)
+    {
         if ($this->session->userdata('logged_in')) {
             $response = $this->Question_model->cast_comment_vote($comment_id, $this->session->userdata('user_id'), 'down');
             echo json_encode($response);
         } else {
             echo json_encode(['error' => 'User not logged in.']);
         }
-    }  
+    }
 }

@@ -1,6 +1,7 @@
 <?php $this->load->view('includes/header'); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <title>Login</title>
     <?php $this->load->view('header_auth', ['title' => 'Login']); ?>
 </head>
+
 <body>
     <div id="loginFormContainer" class="container" data-url="<?php echo base_url('auth/login_process'); ?>"></div>
     <script type="text/template" id="login-template">
@@ -24,7 +26,7 @@
                     <input type="password" id="password" name="password" placeholder="Password" />
                     </div>
                     <div>
-                        <?php if ($this->session->flashdata('error')): ?>
+                        <?php if ($this->session->flashdata('error')) : ?>
                         <div class="alert alert-danger">
                             <?php echo $this->session->flashdata('error'); ?>
                         </div>
@@ -44,4 +46,5 @@
     </script>
     <script src="<?php echo base_url('assets/js/login.js'); ?>"></script>
 </body>
+
 </html>

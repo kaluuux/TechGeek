@@ -1,6 +1,7 @@
 <?php $this->load->view('includes/header'); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <title>Sign Up</title>
     <?php $this->load->view('header_auth', ['title' => 'Signup']); ?>
 </head>
+
 <body>
     <div id="userForm" class="container"></div>
     <script type="text/template" id="user-template">
@@ -28,7 +30,7 @@
                     <input type="password" name="password" placeholder="Password" required>
                     </div>
                     <div>
-                    <?php if ($this->session->flashdata('error')): ?>
+                    <?php if ($this->session->flashdata('error')) : ?>
                         <div class="alert alert-danger">
                             <p><?php echo $this->session->flashdata('error'); ?></p>
                         </div>
@@ -49,4 +51,5 @@
 
     <script src="<?php echo base_url('assets/js/user.js'); ?>"></script>
 </body>
+
 </html>

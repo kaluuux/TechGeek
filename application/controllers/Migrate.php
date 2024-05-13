@@ -5,7 +5,6 @@ class Migrate extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        // Make sure to load the database library if it's not autoloaded
         $this->load->database();
         $this->load->library('migration');
     }

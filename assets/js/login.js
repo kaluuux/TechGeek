@@ -12,7 +12,6 @@ $(document).ready(function () {
 		events: {
 			"submit #actualLoginForm": "submitForm",
 		},
-		
 
 		initialize: function () {
 			this.model = new User();
@@ -26,7 +25,7 @@ $(document).ready(function () {
 
 		submitForm: function (event) {
 			event.preventDefault();
-			var loginUrl = $('#loginFormContainer').data('url');
+			var loginUrl = $("#loginFormContainer").data("url");
 
 			var email = this.$("#email").val().trim();
 			var password = this.$("#password").val().trim();
@@ -43,29 +42,30 @@ $(document).ready(function () {
 			var loginData = { email: email, password: password };
 			this.model.set(loginData);
 			console.log("Login submitted with:", this.model.toJSON());
-			var csrfToken = $('meta[name="csrf-token"]').attr('content');
+			var csrfToken = $('meta[name="csrf-token"]').attr("content");
 			$.ajax({
 				url: loginUrl,
 				type: "POST",
 				data: {
 					email: email,
 					password: password,
-					csrf_token_name: csrfToken
+					csrf_token_name: csrfToken,
 				},
 				dataType: "json",
-				success: function(response) {
+				success: function (response) {
 					if (response.success) {
 						window.location.href = response.redirect;
 					} else {
-						var errorHtml = '<div class="alert alert-danger">' + response.message + '</div>';
-						$('#actualLoginForm .login-button').before(errorHtml);
+						var errorHtml =
+							'<div class="alert alert-danger">' + response.message + "</div>";
+						$("#actualLoginForm .login-button").before(errorHtml);
 					}
 				},
-				error: function(xhr, textStatus, error) {
-					console.log("AJAX Error:", textStatus + ': ' + error);
+				error: function (xhr, textStatus, error) {
+					console.log("AJAX Error:", textStatus + ": " + error);
 					console.log("Response was:", xhr.responseText);
 					alert("Login failed. Please try again later.");
-				}				
+				},
 			});
 		},
 	});
